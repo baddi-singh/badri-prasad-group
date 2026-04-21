@@ -1,0 +1,271 @@
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import ComingSoon from './components/ComingSoon';
+import './index.css';
+
+// ==========================================
+// CONFIGURATION DATA
+// ==========================================
+const VENTURES_DATA = [
+  { id: 'tech', category: 'Technology Division', title: 'Badri Digital Solutions', desc: 'Engineering robust digital infrastructures and QA precision.', linkUrl: '/page/digital', linkText: 'Visit Portal' },
+  { id: 'travel', category: 'Transit & Mobility', title: 'Badri Travels', desc: 'Executing high-efficiency logistic and corporate transit.', linkUrl: '/page/travels', linkText: 'Book Fleet' },
+  { id: 'retail', category: 'Apparel & Retail', title: 'Social Tailors & Textile', desc: 'Mastering the Omnichannel supply chain and elite craftsmanship.', linkUrl: '/page/tailors', linkText: 'Shop Collection' },
+  { id: 'infra', category: 'Smart Infrastructure', title: 'Badri Smart Integrations', desc: 'Enterprise and domestic electronic setups and maintenance.', linkUrl: '/page/infra', linkText: 'View Services' },
+  { id: 'realestate', category: 'Property & Assets', title: 'Badri Real Estate', desc: 'Premium commercial and residential property development.', linkUrl: '/page/real-estate', linkText: 'Explore Properties' },
+  { id: 'invest', category: 'Investment & Growth', title: 'Badri Venture Studio', desc: 'Empowering industrial startups with seed capital and mentorship.', linkUrl: '/page/ventures', linkText: 'Join Incubator' }
+];
+
+const NEWS_DATA = [
+  { id: 1, date: 'APRIL 10, 2026', title: 'Badri Travels acquires new fleet of 500 EVs for Corporate Transit.' },
+  { id: 2, date: 'MARCH 22, 2026', title: 'Badri Digital Solutions launches open-source Playwright Automation Framework.' },
+  { id: 3, date: 'FEB 05, 2026', title: 'Social Tailors records 200% YOY growth in Omnichannel Global Exports.' }
+];
+
+// ==========================================
+// MAIN HOME COMPONENT
+// ==========================================
+const Home = () => {
+  const [loading, setLoading] = useState(true);
+  const [mousePos, setMousePos] = useState({ x: -100, y: -100 });
+  const [isHovering, setIsHovering] = useState(false);
+
+  // Preloader Logic
+  useEffect(() => {
+    setTimeout(() => { setLoading(false); }, 2000);
+  }, []);
+
+  // Custom Cursor Tracking
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  const scrollToTop = () => { window.scrollTo({ top: 0, behavior: 'smooth' }); };
+
+  return (
+    <>
+      {/* 1. Preloader */}
+      <div className={`preloader ${!loading ? 'fade-out' : ''}`}>
+        <div className="preloader-brand">BADRI<span>PRASAD</span></div>
+      </div>
+
+      {/* 2. Custom Cursor (Hidden on Mobile via CSS) */}
+      <div 
+        className={`custom-cursor ${isHovering ? 'hovering' : ''}`} 
+        style={{ left: `${mousePos.x}px`, top: `${mousePos.y}px` }}
+      ></div>
+
+      <div 
+        onMouseEnter={() => setIsHovering(true)} 
+        onMouseLeave={() => setIsHovering(false)}
+      >
+        {/* Navigation - Added CAREERS */}
+        <nav>
+          <Link to="/" onClick={scrollToTop} className="brand-name" style={{ textDecoration: 'none', color: '#fff' }}>
+              BADRI<span>PRASAD</span>
+          </Link>
+          <div className="nav-links">
+              <a href="#about">Leadership</a>
+              <a href="#ecosystem">Ventures</a>
+              <a href="#news">Newsroom</a>
+              <a href="#contact">Contact</a>
+              <Link to="/page/careers" style={{ color: '#00e5ff' }}>Careers</Link>
+              <Link to="/page/investors" style={{ color: '#d4af37', fontWeight: 'bold' }}>Investor Portal</Link>
+          </div>
+        </nav>
+
+        {/* Hero Section */}
+        <section className="hero animate-up">
+          <span className="section-subtitle">Global Quality. Seamless Execution.</span>
+          <h1>Architecting The Future <br /> Of Enterprise.</h1>
+          <p>A unified conglomerate bridging the gap between Quality Assurance in Code, Seamless Motion in Transit, and Omnichannel Excellence in Textiles.</p>
+          <div style={{ marginTop: '40px' }}>
+              <a href="#ecosystem" className="btn-gold">Explore The Ecosystem</a>
+          </div>
+        </section>
+
+        {/* NEW: Trust Strip (Client Logos Placeholder) */}
+        <div className="trust-strip animate-up">
+            <span>Trusted By Global Leaders</span>
+            <span>✦ TECH-CORP INTL</span>
+            <span>✦ AERO-SPACE DEFENCE</span>
+            <span>✦ GLOBAL RETAIL INC</span>
+            <span>✦ FIN-SERVE HOLDINGS</span>
+        </div>
+
+        {/* NEW: Leadership & Governance Section */}
+        <section id="about" className="container animate-up">
+          <span className="section-subtitle">Leadership & Governance</span>
+          <h2 className="section-title">The Visionary Force.</h2>
+          <div className="about-grid" style={{ marginTop: '3rem' }}>
+              <div>
+                  {/* <img src="https://drive.google.com/file/d/1111kjyA30FIckyZSbURjf2p1Ek__IjPt/view?usp=share_link" alt="CEO Portrait" className="leadership-img" /> */}
+                <img src="/ceo-portrait.png" alt="CEO Portrait" className="leadership-img" />
+                
+              </div>
+              <div>
+                  <h3 style={{ fontSize: '2rem', color: '#fff', marginBottom: '10px' }}>Badri Prasad</h3>
+                  <p style={{ color: '#d4af37', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '20px' }}>Founder & Chairman</p>
+                  <p className="section-desc">
+                    Starting from a deep-rooted expertise in Software Quality Assurance, Mr. Prasad built this conglomerate on one unshakeable principle: <strong>"If the process is flawless, the scale is infinite."</strong>
+                  </p>
+                  <div className="quote-box">
+                    "We don't just build companies. We engineer ecosystems that are resilient, transparent, and built to outlast market cycles. Trust is our ultimate currency."
+                  </div>
+              </div>
+          </div>
+        </section>
+
+        {/* The Ecosystem */}
+        <section id="ecosystem" className="container animate-up">
+          <span className="section-subtitle">Our Subsidiaries</span>
+          <h2 className="section-title">The Badri Ecosystem</h2>
+          <div className="core-scroll-container" style={{ marginTop: '3rem' }}>
+              {VENTURES_DATA.map(venture => (
+                  <div className="glass-card" key={venture.id}>
+                      <span className="section-subtitle" style={{ fontSize: '0.75rem' }}>{venture.category}</span>
+                      <h3>{venture.title}</h3>
+                      <p>{venture.desc}</p>
+                      <Link to={venture.linkUrl} className="explore-link">{venture.linkText} &rarr;</Link>
+                  </div>
+              ))}
+          </div>
+        </section>
+
+        {/* NEW: Global Footprint (Map) */}
+        <section className="container animate-up">
+            <div style={{ textAlign: 'center' }}>
+                <span className="section-subtitle">Visual Scale</span>
+                <h2 className="section-title">Operating Across 4 Continents</h2>
+                <p className="section-desc" style={{ margin: '0 auto' }}>From our IT Hub in Chandigarh to our global B2B clients.</p>
+            </div>
+            
+            <div className="map-container">
+                {/* Dots positioned conceptually on the map background */}
+                <div className="glowing-dot" data-city="CHANDIGARH (HQ)" style={{ top: '45%', left: '70%' }}></div>
+                <div className="glowing-dot" data-city="LONDON" style={{ top: '30%', left: '48%' }}></div>
+                <div className="glowing-dot" data-city="NEW YORK" style={{ top: '35%', left: '25%' }}></div>
+                <div className="glowing-dot" data-city="DUBAI" style={{ top: '48%', left: '62%' }}></div>
+            </div>
+        </section>
+
+        {/* NEW: Sustainability & CSR */}
+        <section className="container animate-up">
+            <div className="csr-box">
+                <span className="section-subtitle" style={{ color: '#2e8b57' }}>Corporate Social Responsibility</span>
+                <h2 className="section-title">Pioneering a Greener Tomorrow.</h2>
+                <p className="section-desc" style={{ margin: '0 auto 2rem', color: '#a0bfa0' }}>
+                    Scale means nothing without sustainability. By 2030, Badri Travels commits to a <strong>100% Electric Vehicle (EV) Fleet</strong>, while Social Tailors is actively implementing Zero-Waste Fabric Recycling protocols across all manufacturing units.
+                </p>
+                <Link to="/page/sustainability" className="btn-gold" style={{ borderColor: '#2e8b57', color: '#2e8b57' }}>Read Our 2030 Green Vision</Link>
+            </div>
+        </section>
+
+        {/* NEW: Media Room / Press Releases */}
+        <section id="news" className="container animate-up">
+            <span className="section-subtitle">Press & Media</span>
+            <h2 className="section-title">Latest Dispatches</h2>
+            <div className="news-grid">
+                {NEWS_DATA.map(news => (
+                    <div className="news-card" key={news.id}>
+                        <span className="news-date">{news.date}</span>
+                        <h4 style={{ color: '#fff', lineHeight: '1.5' }}>{news.title}</h4>
+                        <Link to="/page/press" style={{ color: '#8b9bb4', textDecoration: 'none', fontSize: '0.8rem', marginTop: '15px', display: 'block' }}>Read Release &rarr;</Link>
+                    </div>
+                ))}
+            </div>
+        </section>
+
+        {/* Contact Us */}
+        <section id="contact" className="container animate-up">
+          <div className="contact-grid">
+              <div>
+                  <span className="section-subtitle">Initiate Contact</span>
+                  <h2 className="section-title">Partner With Excellence.</h2>
+                  <p className="section-desc">Whether you are looking for enterprise software validation, corporate fleet tie-ups, or bulk textile manufacturing, our team is ready to scale your vision.</p>
+                  <div style={{ marginTop: '2rem' }}>
+                      <h4 style={{ color: '#fff', marginBottom: '5px' }}>Global Headquarters</h4>
+                      <p style={{ color: '#8b9bb4', marginBottom: '20px' }}>Near MDC Sector 5, Kishangarh<br/>Chandigarh IT Park Region, India</p>
+                      <h4 style={{ color: '#fff', marginBottom: '5px' }}>Direct Inquiry</h4>
+                      <p style={{ color: '#8b9bb4' }}>investors@badriprasadgroup.com</p>
+                  </div>
+              </div>
+              <div className="about-glass-box">
+                  <form onSubmit={(e) => e.preventDefault()}>
+                      <div className="form-group">
+                          <input type="text" className="form-control" placeholder="Full Name / Company Name" required />
+                      </div>
+                      <div className="form-group">
+                          <input type="email" className="form-control" placeholder="Corporate Email Address" required />
+                      </div>
+                      <div className="form-group">
+                          <select className="form-control" style={{ appearance: 'none' }} required>
+                              <option value="">Select Vertical of Interest...</option>
+                              {VENTURES_DATA.map(v => (
+                                  <option key={v.id} value={v.id}>{v.title}</option>
+                              ))}
+                              <option value="careers">Careers / Talent Acquisition</option>
+                              <option value="general_invest">General Investment / Partnership</option>
+                          </select>
+                      </div>
+                      <div className="form-group">
+                          <textarea className="form-control" placeholder="How can we collaborate?" required></textarea>
+                      </div>
+                      <button type="submit" className="btn-gold" style={{ width: '100%' }}>Submit Inquiry</button>
+                  </form>
+              </div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer>
+          <div className="container" style={{ padding: '0', maxWidth: '1300px' }}>
+              <div className="footer-flex">
+                  <div className="footer-col" style={{ flex: '2', minWidth: '300px' }}>
+                      <Link to="/" onClick={scrollToTop} className="brand-name" style={{ marginBottom: '20px', display: 'inline-block', textDecoration: 'none', color: '#fff' }}>
+                          BADRI<span>PRASAD</span>
+                      </Link>
+                      <p style={{ maxWidth: '300px' }}>A diversified global conglomerate setting the standard in Tech, Transit, Textiles, and Infrastructure.</p>
+                  </div>
+                  <div className="footer-col" style={{ flex: '1', minWidth: '150px' }}>
+                      <h4>Company</h4>
+                      <Link to="/page/leadership">Leadership</Link>
+                      <Link to="/page/careers" style={{ color: '#00e5ff' }}>Careers</Link>
+                      <Link to="/page/sustainability">CSR Vision 2030</Link>
+                      <Link to="/page/press">Press Room</Link>
+                  </div>
+                  <div className="footer-col" style={{ flex: '1', minWidth: '150px' }}>
+                      <h4>Legal</h4>
+                      <Link to="/page/privacy">Privacy Policy</Link>
+                      <Link to="/page/terms">Terms of Service</Link>
+                      <Link to="/page/compliance">Compliance</Link>
+                  </div>
+              </div>
+              <div style={{ textAlign: 'center', color: '#555', marginTop: '4rem', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                  &copy; 2026 Badri-Prasad Group. Engineered with precision.
+              </div>
+          </div>
+        </footer>
+      </div>
+    </>
+  );
+};
+
+// ==========================================
+// APP ROUTER
+// ==========================================
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/page/:pageName" element={<ComingSoon />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
