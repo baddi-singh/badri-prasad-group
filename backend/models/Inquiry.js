@@ -5,7 +5,8 @@ const InquirySchema = new mongoose.Schema({
   email: { type: String, required: [true, 'Please add an email'] },
   vertical: { type: String, required: true }, // Travels, IT, etc.
   message: { type: String, required: true },
-  status: { type: String, enum: ['new', 'contacted', 'closed'], default: 'new' }
+  status: { type: String, enum: ['new', 'contacted', 'closed'], default: 'new' },
+  isDeleted: { type: Boolean, default: false } // <--- Added for TRASH feature
 }, { timestamps: true });
 
 module.exports = mongoose.model('Inquiry', InquirySchema);

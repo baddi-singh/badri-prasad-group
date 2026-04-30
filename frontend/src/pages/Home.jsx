@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
 import TrustStrip from '../components/TrustStrip';
 import Leadership from '../components/Leadership';
@@ -7,7 +6,7 @@ import Ecosystem from '../components/Ecosystem';
 import GlobalMap from '../components/GlobalMap';
 import CSR from '../components/CSR';
 import Newsroom from '../components/Newsroom';
-import Contact from '../components/Contact';
+import Contact from '../components/Contact'; 
 import Footer from '../components/Footer';
 
 const Home = () => {
@@ -34,11 +33,7 @@ const Home = () => {
       <div className={`custom-cursor ${isHovering ? 'hovering' : ''}`} style={{ left: `${mousePos.x}px`, top: `${mousePos.y}px` }}></div>
 
       <div onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>
-        
-        {/* ==========================================
-            THE ENTERPRISE MODULAR ARCHITECTURE 
-        ========================================== */}
-        <Navbar scrollToTop={scrollToTop} />
+        {/* Yahan se poora Enterprise flow wapas aagaya! */}
         <Hero />
         <TrustStrip />
         <Leadership />
@@ -46,9 +41,8 @@ const Home = () => {
         <GlobalMap />
         <CSR />
         <Newsroom />
-        <Contact />
+        <Contact /> 
         <Footer scrollToTop={scrollToTop} />
-        
       </div>
     </>
   );

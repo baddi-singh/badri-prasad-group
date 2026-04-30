@@ -1,38 +1,48 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const mongoose = require('mongoose');
-const colors = require('colors');
 const cors = require('cors');
+const mongoose = require('mongoose');
+const rateLimit = require('express-rate-limit'); // Naya import for security
 
-// Load environment variables
+// Env & App setup
 dotenv.config();
-
 const app = express();
 
-// Middlewares
+// ==========================================
+// MIDDLEWARES & SECURITY
+// ==========================================
 app.use(cors());
-app.use(express.json());
+app.use(express.json()); // Frontend se data lene ke liye
 
-// Database Connection Logic
-const connectDB = async () => {
-  try {
-    const conn = await mongoose.connect(process.env.MONGO_URI);
-    console.log(`✅ MongoDB Connected: ${conn.connection.host}`.cyan.underline.bold);
-  } catch (error) {
-    console.error(`❌ Connection Error: ${error.message}`.red.bold);
-    // Agar password galat hai toh yahan error dikhega
-    process.exit(1);
-  }
-};
-
-connectDB();
-
-app.get('/', (req, res) => {
-  res.send('Badri Prasad Enterprise Portal API is Running...');
+// Rate Limiter: 15 minute ke andar ek IP se max 200 requests (Spam aur bot attacks rokne ke liye)
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, 
+  max: 200, 
+  message: { success: false, message: "Too many requests from this IP. Please wait 15 minutes." }
 });
+app.use('/api', apiLimiter);
 
-const PORT = process.env.PORT || 5000;
+// Purane local uploads ko serve karne ke liye (Taki purani testing wali files kaam karein)
+app.use('/uploads', express.static('uploads')); 
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold);
-});
+// ==========================================
+// DB CONNECTION
+// ==========================================
+mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/BadriPrasadDB')
+  .then(() => console.log('✅ MongoDB Connected: BadriPrasadDB'))
+  .catch((err) => console.log('❌ DB Error:', err));
+
+// ==========================================
+// THE BRIDGE (Routes Registration)
+// ==========================================
+app.use('/api/inquiries', require('./routes/inquiryRoutes'));
+app.use('/api/careers', require('./routes/careerRoutes')); 
+app.use('/api/admin', require('./routes/adminRoutes')); 
+app.use('/api/companies', require('./routes/companyRoutes')); 
+app.use('/api/news', require('./routes/newsRoutes'));
+
+// ==========================================
+// START SERVER
+// ==========================================
+const PORT = process.env.PORT || 5001;
+app.listen(PORT, () => console.log(`🚀 Server running securely on port ${PORT}`));
