@@ -16,7 +16,7 @@ const Contact = () => {
     setStatus('Sending...');
     try {
       // Dhyan dein: backend port 5001 par hai
-      const res = await axios.post('http://localhost:5001/api/inquiries', formData);
+      const res = await axios.post('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/inquiries', formData);
       if (res.data.success) {
         setStatus('✅ Inquiry Submitted Successfully!');
         setFormData({ name: '', email: '', vertical: '', message: '' });
@@ -103,7 +103,7 @@ export default Contact;
 
 //     try {
 //       // Backend API Call (Port 50001)
-//       const res = await axios.post('http://localhost:5001/api/inquiries', formData);
+//       const res = await axios.post('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/inquiries', formData);
       
 //       if (res.data.success) {
 //         setStatus('✅ Inquiry Submitted Successfully!');

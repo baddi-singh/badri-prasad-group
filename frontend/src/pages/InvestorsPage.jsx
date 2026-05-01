@@ -19,7 +19,7 @@ const InvestorsPage = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post('http://localhost:5001/api/inquiries', {
+      await axios.post('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/inquiries', {
         name: formData.firm,
         email: formData.email,
         vertical: 'INVESTOR RELATIONS', // Auto-tagged for Admin Dashboard

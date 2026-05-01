@@ -24,7 +24,7 @@ const Careers = () => {
     submitData.append('role', role); submitData.append('resume', resume);
 
     try {
-      const res = await axios.post('http://localhost:5001/api/careers/apply', submitData, { headers: { 'Content-Type': 'multipart/form-data' } });
+      const res = await axios.post('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/careers/apply', submitData, { headers: { 'Content-Type': 'multipart/form-data' } });
       if (res.data.success) {
         setStatus('✅ Application Submitted Successfully!');
         setFormData({ fullName: '', email: '', phone: '', targetCompany: '', role: '' });
@@ -140,7 +140,7 @@ export default Careers;
 //     submitData.append('resume', resume); // File attach kar di
 
 //     try {
-//       const res = await axios.post('http://localhost:5001/api/careers/apply', submitData, {
+//       const res = await axios.post('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/careers/apply', submitData, {
 //         headers: {
 //           'Content-Type': 'multipart/form-data' // Ye browser ko batata hai ki file ja rahi hai
 //         }

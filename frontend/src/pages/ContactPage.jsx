@@ -10,7 +10,7 @@ const ContactPage = () => {
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
-        const res = await axios.get('http://localhost:5001/api/companies');
+        const res = await axios.get('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/companies');
         setCompanies(res.data.data);
       } catch (err) {
         console.error("Failed to fetch companies", err); 
@@ -24,7 +24,7 @@ const ContactPage = () => {
     setLoading(true);
     try {
       // EXACT BACKEND MATCH: /api/inquiries
-      await axios.post('http://localhost:5001/api/inquiries', formData);
+      await axios.post('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/inquiries', formData);
       alert('Inquiry Submitted Successfully!');
       setFormData({ name: '', email: '', vertical: '', message: '' });
     } catch (err) {

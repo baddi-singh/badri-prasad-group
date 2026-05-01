@@ -11,7 +11,7 @@ const CareersPage = () => {
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
-        const res = await axios.get('http://localhost:5001/api/companies');
+        const res = await axios.get('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/companies');
         setCompanies(res.data.data);
       } catch (err) {
         console.error("Failed to fetch companies", err);
@@ -31,7 +31,7 @@ const CareersPage = () => {
 
     try {
       // BUG FIX: Removed manual 'Content-Type' header. Axios + Browser will handle the boundary automatically.
-      await axios.post('http://localhost:5001/api/careers', data);
+      await axios.post('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/careers', data);
       
       alert('Application Submitted Successfully!');
       

@@ -17,3 +17,7 @@ Cloudary:
 API Secret-: va5V4qxlyuHh4rVkFzhg13faOcM
 API Key: 774657344876321
 API Env variable-: CLOUDINARY_URL=cloudinary://<your_api_key>:<your_api_secret>@dsex8utu5
+
+/// Vercel Backend 
+Build Command: npm install
+Start Command: node server.js

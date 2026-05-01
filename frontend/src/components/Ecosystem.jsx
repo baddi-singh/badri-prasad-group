@@ -8,7 +8,7 @@ const Ecosystem = () => {
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
-        const res = await axios.get('http://localhost:5001/api/companies');
+        const res = await axios.get('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/companies');
         setCompanies(res.data.data);
       } catch (err) {
         console.error("Failed to load ecosystem", err);

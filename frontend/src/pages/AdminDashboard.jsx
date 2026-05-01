@@ -55,22 +55,22 @@
 //       let inqData = [], carData = [], compData = [], newsData = [];
 
 //       try {
-//         const resInq = await axios.get('http://localhost:5001/api/inquiries', config);
+//         const resInq = await axios.get('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/inquiries', config);
 //         inqData = resInq.data.data.map(d => ({ ...d, docType: 'inquiries' }));
 //       } catch (err) { console.error("Inquiries fetch error:", err); }
 
 //       try {
-//         const resCar = await axios.get('http://localhost:5001/api/careers', config);
+//         const resCar = await axios.get('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/careers', config);
 //         carData = resCar.data.data.map(d => ({ ...d, docType: 'careers' }));
 //       } catch (err) { console.error("Careers fetch error:", err); }
 
 //       try {
-//         const resComp = await axios.get('http://localhost:5001/api/companies', config);
+//         const resComp = await axios.get('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/companies', config);
 //         compData = resComp.data.data;
 //       } catch (err) { console.error("Companies fetch error:", err); }
 
 //       try {
-//         const resNews = await axios.get('http://localhost:5001/api/news', config);
+//         const resNews = await axios.get('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/news', config);
 //         newsData = resNews.data.data.map(d => ({ ...d, docType: 'news' }));
 //       } catch (err) { console.error("News fetch error:", err); }
 
@@ -83,7 +83,7 @@
 //   const handleAction = async (id, docType, action) => {
 //     if (!window.confirm(`Are you sure you want to ${action} this record?`)) return;
 //     try {
-//       let url = `http://localhost:5001/api/${docType}/${id}`;
+//       let url = `[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/${docType}/${id}`;
 //       if (action === 'trash') await axios.patch(`${url}/trash`, {}, getAuthConfig());
 //       if (action === 'restore') await axios.patch(`${url}/restore`, {}, getAuthConfig());
 //       if (action === 'delete') await axios.delete(url, getAuthConfig());
@@ -97,8 +97,8 @@
 //   const handleSaveCompany = async (e) => {
 //     e.preventDefault();
 //     try {
-//       if (editId) await axios.put(`http://localhost:5001/api/companies/${editId}`, companyForm, getAuthConfig());
-//       else await axios.post(`http://localhost:5001/api/companies`, companyForm, getAuthConfig());
+//       if (editId) await axios.put(`[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/companies/${editId}`, companyForm, getAuthConfig());
+//       else await axios.post(`[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/companies`, companyForm, getAuthConfig());
 //       setShowForm(false); setEditId(null); setCompanyForm({ name: '', vertical: '', status: '', desc: '', websiteUrl: '', team: [] });
 //       setRefreshTrigger(prev => prev + 1);
 //     } catch (err) { 
@@ -110,8 +110,8 @@
 //   const handleSaveNews = async (e) => {
 //     e.preventDefault();
 //     try {
-//       if (editId) await axios.put(`http://localhost:5001/api/news/${editId}`, newsForm, getAuthConfig());
-//       else await axios.post(`http://localhost:5001/api/news`, newsForm, getAuthConfig());
+//       if (editId) await axios.put(`[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/news/${editId}`, newsForm, getAuthConfig());
+//       else await axios.post(`[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/news`, newsForm, getAuthConfig());
 //       setShowForm(false); setEditId(null); setNewsForm({ title: '', date: '', category: '', description: '', linkUrl: '' });
 //       setRefreshTrigger(prev => prev + 1);
 //     } catch (err) { 
@@ -123,7 +123,7 @@
 //   const deleteRecord = async (id, type) => {
 //     if(window.confirm(`Move this ${type} to trash?`)) {
 //       try {
-//         await axios.patch(`http://localhost:5001/api/${type}/${id}/trash`, {}, getAuthConfig());
+//         await axios.patch(`[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/${type}/${id}/trash`, {}, getAuthConfig());
 //         setRefreshTrigger(prev => prev + 1);
 //       } catch (err) {
 //         console.error(err);
@@ -333,7 +333,7 @@
 
 //                       <td style={{ textAlign: 'center' }}>
 //                         {item.resumePath ? (
-//                           <a href={`http://localhost:5001/${item.resumePath}`} target="_blank" rel="noopener noreferrer" style={{ color: '#000', background:'#00e5ff', textDecoration: 'none', fontSize: '10px', fontWeight:'bold', padding: '6px 12px', borderRadius: '4px', display: 'inline-block', whiteSpace: 'nowrap' }}>📄 VIEW PDF</a>
+//                           <a href={`[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/${item.resumePath}`} target="_blank" rel="noopener noreferrer" style={{ color: '#000', background:'#00e5ff', textDecoration: 'none', fontSize: '10px', fontWeight:'bold', padding: '6px 12px', borderRadius: '4px', display: 'inline-block', whiteSpace: 'nowrap' }}>📄 VIEW PDF</a>
 //                         ) : (
 //                           <span style={{ color: '#444', fontSize: '11px', fontStyle: 'italic' }}>No File</span>
 //                         )}
@@ -423,22 +423,22 @@ const AdminDashboard = () => {
       let inqData = [], carData = [], compData = [], newsData = [];
 
       try {
-        const resInq = await axios.get('http://localhost:5001/api/inquiries', config);
+        const resInq = await axios.get('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/inquiries', config);
         inqData = resInq.data.data.map(d => ({ ...d, docType: 'inquiries' }));
       } catch (err) { console.error("Inquiries fetch error:", err); }
 
       try {
-        const resCar = await axios.get('http://localhost:5001/api/careers', config);
+        const resCar = await axios.get('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/careers', config);
         carData = resCar.data.data.map(d => ({ ...d, docType: 'careers' }));
       } catch (err) { console.error("Careers fetch error:", err); }
 
       try {
-        const resComp = await axios.get('http://localhost:5001/api/companies', config);
+        const resComp = await axios.get('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/companies', config);
         compData = resComp.data.data;
       } catch (err) { console.error("Companies fetch error:", err); }
 
       try {
-        const resNews = await axios.get('http://localhost:5001/api/news', config);
+        const resNews = await axios.get('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/news', config);
         newsData = resNews.data.data.map(d => ({ ...d, docType: 'news' }));
       } catch (err) { console.error("News fetch error:", err); }
 
@@ -451,7 +451,7 @@ const AdminDashboard = () => {
   const handleAction = async (id, docType, action) => {
     if (!window.confirm(`Are you sure you want to ${action} this record?`)) return;
     try {
-      let url = `http://localhost:5001/api/${docType}/${id}`;
+      let url = `[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/${docType}/${id}`;
       if (action === 'trash') await axios.patch(`${url}/trash`, {}, getAuthConfig());
       if (action === 'restore') await axios.patch(`${url}/restore`, {}, getAuthConfig());
       if (action === 'delete') await axios.delete(url, getAuthConfig());
@@ -465,8 +465,8 @@ const AdminDashboard = () => {
   const handleSaveCompany = async (e) => {
     e.preventDefault();
     try {
-      if (editId) await axios.put(`http://localhost:5001/api/companies/${editId}`, companyForm, getAuthConfig());
-      else await axios.post(`http://localhost:5001/api/companies`, companyForm, getAuthConfig());
+      if (editId) await axios.put(`[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/companies/${editId}`, companyForm, getAuthConfig());
+      else await axios.post(`[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/companies`, companyForm, getAuthConfig());
       setShowForm(false); setEditId(null); setCompanyForm({ name: '', vertical: '', status: '', desc: '', websiteUrl: '', team: [] });
       setRefreshTrigger(prev => prev + 1);
     } catch (err) { 
@@ -478,8 +478,8 @@ const AdminDashboard = () => {
   const handleSaveNews = async (e) => {
     e.preventDefault();
     try {
-      if (editId) await axios.put(`http://localhost:5001/api/news/${editId}`, newsForm, getAuthConfig());
-      else await axios.post(`http://localhost:5001/api/news`, newsForm, getAuthConfig());
+      if (editId) await axios.put(`[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/news/${editId}`, newsForm, getAuthConfig());
+      else await axios.post(`[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/news`, newsForm, getAuthConfig());
       setShowForm(false); setEditId(null); setNewsForm({ title: '', date: '', category: '', description: '', linkUrl: '' });
       setRefreshTrigger(prev => prev + 1);
     } catch (err) { 
@@ -491,7 +491,7 @@ const AdminDashboard = () => {
   const deleteRecord = async (id, type) => {
     if(window.confirm(`Move this ${type} to trash?`)) {
       try {
-        await axios.patch(`http://localhost:5001/api/${type}/${id}/trash`, {}, getAuthConfig());
+        await axios.patch(`[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/${type}/${id}/trash`, {}, getAuthConfig());
         setRefreshTrigger(prev => prev + 1);
       } catch (err) {
         console.error(err);
@@ -706,7 +706,7 @@ const AdminDashboard = () => {
                       {activeMainTab !== 'inquiries' && (
                         <td style={{ textAlign: 'center' }}>
                           {item.resumePath ? (
-                            <a href={`http://localhost:5001/${item.resumePath}`} target="_blank" rel="noopener noreferrer" style={{ color: '#000', background:'#00e5ff', textDecoration: 'none', fontSize: '10px', fontWeight:'bold', padding: '6px 12px', borderRadius: '4px', display: 'inline-block', whiteSpace: 'nowrap' }}>📄 VIEW PDF</a>
+                            <a href={`[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/${item.resumePath}`} target="_blank" rel="noopener noreferrer" style={{ color: '#000', background:'#00e5ff', textDecoration: 'none', fontSize: '10px', fontWeight:'bold', padding: '6px 12px', borderRadius: '4px', display: 'inline-block', whiteSpace: 'nowrap' }}>📄 VIEW PDF</a>
                           ) : (
                             <span style={{ color: '#444', fontSize: '11px', fontStyle: 'italic' }}>No File</span>
                           )}
@@ -824,22 +824,22 @@ export default AdminDashboard;
 //       let inqData = [], carData = [], compData = [], newsData = [];
 
 //       try {
-//         const resInq = await axios.get('http://localhost:5001/api/inquiries', config);
+//         const resInq = await axios.get('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/inquiries', config);
 //         inqData = resInq.data.data.map(d => ({ ...d, docType: 'inquiries' }));
 //       } catch (err) { console.error("Inquiries fetch error:", err); }
 
 //       try {
-//         const resCar = await axios.get('http://localhost:5001/api/careers', config);
+//         const resCar = await axios.get('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/careers', config);
 //         carData = resCar.data.data.map(d => ({ ...d, docType: 'careers' }));
 //       } catch (err) { console.error("Careers fetch error:", err); }
 
 //       try {
-//         const resComp = await axios.get('http://localhost:5001/api/companies', config);
+//         const resComp = await axios.get('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/companies', config);
 //         compData = resComp.data.data;
 //       } catch (err) { console.error("Companies fetch error:", err); }
 
 //       try {
-//         const resNews = await axios.get('http://localhost:5001/api/news', config);
+//         const resNews = await axios.get('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/news', config);
 //         newsData = resNews.data.data.map(d => ({ ...d, docType: 'news' }));
 //       } catch (err) { console.error("News fetch error:", err); }
 
@@ -852,7 +852,7 @@ export default AdminDashboard;
 //   const handleAction = async (id, docType, action) => {
 //     if (!window.confirm(`Are you sure you want to ${action} this record?`)) return;
 //     try {
-//       let url = `http://localhost:5001/api/${docType}/${id}`;
+//       let url = `[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/${docType}/${id}`;
 //       if (action === 'trash') await axios.patch(`${url}/trash`, {}, getAuthConfig());
 //       if (action === 'restore') await axios.patch(`${url}/restore`, {}, getAuthConfig());
 //       if (action === 'delete') await axios.delete(url, getAuthConfig());
@@ -866,8 +866,8 @@ export default AdminDashboard;
 //   const handleSaveCompany = async (e) => {
 //     e.preventDefault();
 //     try {
-//       if (editId) await axios.put(`http://localhost:5001/api/companies/${editId}`, companyForm, getAuthConfig());
-//       else await axios.post(`http://localhost:5001/api/companies`, companyForm, getAuthConfig());
+//       if (editId) await axios.put(`[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/companies/${editId}`, companyForm, getAuthConfig());
+//       else await axios.post(`[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/companies`, companyForm, getAuthConfig());
 //       setShowForm(false); setEditId(null); setCompanyForm({ name: '', vertical: '', status: '', desc: '', websiteUrl: '', team: [] });
 //       setRefreshTrigger(prev => prev + 1);
 //     } catch (err) { 
@@ -879,8 +879,8 @@ export default AdminDashboard;
 //   const handleSaveNews = async (e) => {
 //     e.preventDefault();
 //     try {
-//       if (editId) await axios.put(`http://localhost:5001/api/news/${editId}`, newsForm, getAuthConfig());
-//       else await axios.post(`http://localhost:5001/api/news`, newsForm, getAuthConfig());
+//       if (editId) await axios.put(`[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/news/${editId}`, newsForm, getAuthConfig());
+//       else await axios.post(`[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/news`, newsForm, getAuthConfig());
 //       setShowForm(false); setEditId(null); setNewsForm({ title: '', date: '', category: '', description: '', linkUrl: '' });
 //       setRefreshTrigger(prev => prev + 1);
 //     } catch (err) { 
@@ -892,7 +892,7 @@ export default AdminDashboard;
 //   const deleteRecord = async (id, type) => {
 //     if(window.confirm(`Move this ${type} to trash?`)) {
 //       try {
-//         await axios.patch(`http://localhost:5001/api/${type}/${id}/trash`, {}, getAuthConfig());
+//         await axios.patch(`[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/${type}/${id}/trash`, {}, getAuthConfig());
 //         setRefreshTrigger(prev => prev + 1);
 //       } catch (err) {
 //         console.error(err);
@@ -1103,7 +1103,7 @@ export default AdminDashboard;
 //                       {activeMainTab !== 'inquiries' && (
 //                         <td style={{ textAlign: 'center' }}>
 //                           {item.resumePath ? (
-//                             <a href={`http://localhost:5001/${item.resumePath}`} target="_blank" rel="noopener noreferrer" style={{ color: '#000', background:'#00e5ff', textDecoration: 'none', fontSize: '10px', fontWeight:'bold', padding: '6px 12px', borderRadius: '4px', display: 'inline-block', whiteSpace: 'nowrap' }}>📄 VIEW PDF</a>
+//                             <a href={`[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/${item.resumePath}`} target="_blank" rel="noopener noreferrer" style={{ color: '#000', background:'#00e5ff', textDecoration: 'none', fontSize: '10px', fontWeight:'bold', padding: '6px 12px', borderRadius: '4px', display: 'inline-block', whiteSpace: 'nowrap' }}>📄 VIEW PDF</a>
 //                           ) : (
 //                             <span style={{ color: '#444', fontSize: '11px', fontStyle: 'italic' }}>No File</span>
 //                           )}

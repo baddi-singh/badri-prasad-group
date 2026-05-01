@@ -17,7 +17,7 @@ const AdminLogin = () => {
 
     try {
       // Backend ko as 'userId' & 'password' bhejna hai kyuki adminRoutes mein wahi expected hai
-      const res = await axios.post('http://localhost:5001/api/admin/login', {
+      const res = await axios.post('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/admin/login', {
         userId: email,
         password: password
       });

@@ -9,7 +9,7 @@ const NewsroomPage = () => {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const res = await axios.get('http://localhost:5001/api/news');
+        const res = await axios.get('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/news');
         
         // FIX: Yahan filter laga diya taaki public ko Trashed news na dikhe
         const activeNewsOnly = res.data.data.filter(news => !news.isDeleted);
@@ -110,7 +110,7 @@ export default NewsroomPage;
 //   useEffect(() => {
 //     const fetchNews = async () => {
 //       try {
-//         const res = await axios.get('http://localhost:5001/api/news');
+//         const res = await axios.get('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/news');
 //         setNewsList(res.data.data);
 //       } catch (err) {
 //         console.error("Failed to load news", err);
