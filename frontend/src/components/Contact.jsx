@@ -78,7 +78,7 @@ export default Contact;
 
 // import { useState } from 'react';
 // import axios from 'axios';
-// import { VENTURES_DATA } from '../data/constants';
+// import { VENTURES_DATA } from '../Data/constants';
 
 // const Contact = () => {
 //   // Form State

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { NEWS_DATA } from '../data/constants';
+import { NEWS_DATA } from '../Data/constants';
 
 const Newsroom = () => {
   return (
