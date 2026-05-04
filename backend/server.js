@@ -63,6 +63,7 @@ app.use('/api/admin', require('./routes/adminRoutes'));
 app.use('/api/companies', require('./routes/companyRoutes')); 
 app.use('/api/news', require('./routes/newsRoutes'));
 app.use('/api/investors', require('./routes/investorRoutes'));
+app.use('/api/leadership', require('./routes/leadershipRoutes'));
 
 // ==========================================
 // START SERVER
