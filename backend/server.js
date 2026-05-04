@@ -40,6 +40,7 @@ app.use('/api/careers', require('./routes/careerRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes')); 
 app.use('/api/companies', require('./routes/companyRoutes')); 
 app.use('/api/news', require('./routes/newsRoutes'));
+app.use('/api/investors', require('./routes/investorRoutes'));
 
 // ==========================================
 // START SERVER
