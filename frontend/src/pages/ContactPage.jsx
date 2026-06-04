@@ -1,30 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
+import Navbar from '../components/Navbar'; // Tumhare code ke hisaab se added (agar Navbar needed ho to)
 import Footer from '../components/Footer'; 
+import { useCompanies } from '../context/CompanyContext'; // 🔥 GLOBAL DATA IMPORT
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({ name: '', email: '', vertical: '', message: '' });
-  const [companies, setCompanies] = useState([]); 
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchCompanies = async () => {
-      try {
-        const res = await axios.get('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/companies');
-        setCompanies(res.data.data);
-      } catch (err) {
-        console.error("Failed to fetch companies", err); 
-      }
-    };
-    fetchCompanies();
-  }, []);
+  const { companies } = useCompanies(); // 🔥 Fetch Companies dynamically
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      // EXACT BACKEND MATCH: /api/inquiries
-      await axios.post('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/inquiries', formData);
+      await axios.post(`${import.meta.env.VITE_API_URL}/inquiries`, formData);
       alert('Inquiry Submitted Successfully!');
       setFormData({ name: '', email: '', vertical: '', message: '' });
     } catch (err) {
@@ -37,6 +27,7 @@ const ContactPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col justify-between" style={{ background: '#050505' }}>
+      {/* Agar Navbar component yahan dikhana tha toh zaroor rakhna, warna hta dena. Maine safety ke liye add kar diya hai */}
       <div className="pt-10 pb-20">
         <section style={{ padding: '100px 5%', color: '#fff' }}>
           <div style={{ maxWidth: '600px', margin: '0 auto' }}>
@@ -45,28 +36,29 @@ const ContactPage = () => {
             
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               <input 
-                type="text" placeholder="Full Name" required
+                type="text" name="name" placeholder="Full Name" required
                 value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})}
                 style={{ background: '#111', border: '1px solid #333', color: '#fff', padding: '15px', borderRadius: '6px' }}
               />
               <input 
-                type="email" placeholder="Email" required
+                type="email" name="email" placeholder="Email" required
                 value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})}
                 style={{ background: '#111', border: '1px solid #333', color: '#fff', padding: '15px', borderRadius: '6px' }}
               />
               
               <select 
-                required value={formData.vertical} onChange={(e) => setFormData({...formData, vertical: e.target.value})}
+                name="vertical" required value={formData.vertical} onChange={(e) => setFormData({...formData, vertical: e.target.value})}
                 style={{ background: '#111', border: '1px solid #333', color: '#fff', padding: '15px', borderRadius: '6px', appearance: 'auto' }}
               >
                 <option value="">Select Vertical / Subsidiary...</option>
-                {companies.map(comp => (
+                {/* 🔥 DYNAMIC DROPDOWN ADMIN PANEL WALA */}
+                {companies?.map(comp => (
                   <option key={comp._id} value={comp.name}>{comp.name}</option>
                 ))}
               </select>
 
               <textarea 
-                placeholder="Message" rows="5" required
+                name="message" placeholder="Message" rows="5" required
                 value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})}
                 style={{ background: '#111', border: '1px solid #333', color: '#fff', padding: '15px', borderRadius: '6px' }}
               ></textarea>
