@@ -14,10 +14,19 @@ const app = express();
 
 // VIP CORS Setup: Local, Main, aur Staging URLs ko allow karne ke liye
 const allowedOrigins = [
-  'http://localhost:5173', 
-  'https://www.badridigitalsolutions.com', 
+  'http://localhost:5173',
+
+  // Badri Prasad Group - Production
+  'https://www.badriprasadgroup.com',
+  'https://badriprasadgroup.com',
+
+  // Badri Prasad Group - Staging
+  'https://test.badriprasadgroup.com',
+
+  // Badri Digital Solutions - keep for later
+  'https://www.badridigitalsolutions.com',
   'https://badridigitalsolutions.com',
-  'https://test.badridigitalsolutions.com' // Tumhara naya staging sub-domain
+  'https://test.badridigitalsolutions.com'
 ];
 
 app.use(cors({
