@@ -1,13 +1,13 @@
-import { SUBSIDIARY_NAMES } from '../utils/ecosystem';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import { BADRI_ECOSYSTEM } from '../utils/constants'; // <-- IMPORT KIYA
-// import { SUBSIDIARY_NAMES } from '../utils/ecosystem';
+import { useCompanies } from '../context/CompanyContext'; // 🔥 GLOBAL DATA IMPORT KIYA
 
 const Careers = () => {
   const [formData, setFormData] = useState({ fullName: '', email: '', phone: '', targetCompany: '', role: '' });
   const [resume, setResume] = useState(null);
   const [status, setStatus] = useState('');
+
+  const { companies } = useCompanies(); // 🔥 LIVE DATA FROM ADMIN DASHBOARD
 
   const { fullName, email, phone, targetCompany, role } = formData;
   const onChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -24,7 +24,9 @@ const Careers = () => {
     submitData.append('role', role); submitData.append('resume', resume);
 
     try {
-      const res = await axios.post('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/careers/apply', submitData, { headers: { 'Content-Type': 'multipart/form-data' } });
+      // 🔥 FIX: Single Quotes (') hata kar Backticks (`) lagaye hain
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/careers`, submitData, { headers: { 'Content-Type': 'multipart/form-data' } });
+      
       if (res.data.success) {
         setStatus('✅ Application Submitted Successfully!');
         setFormData({ fullName: '', email: '', phone: '', targetCompany: '', role: '' });
@@ -52,11 +54,11 @@ const Careers = () => {
                     <div className="form-group" style={{ flex: 1 }}><input type="text" name="phone" value={phone} onChange={onChange} className="form-control" placeholder="Phone Number" required /></div>
                   </div>
                   <div className="form-group">
-                      {/* DYNAMIC DROPDOWN */}
+                      {/* 🔥 DYNAMIC DROPDOWN ADMIN PANEL SE */}
                       <select name="targetCompany" value={targetCompany} onChange={onChange} className="form-control" required>
                           <option value="">Select Vertical / Subsidiary...</option>
-                          {BADRI_ECOSYSTEM.map((comp, index) => (
-                            <option key={index} value={comp}>{comp}</option>
+                          {companies?.map((comp) => (
+                            <option key={comp._id} value={comp.name}>{comp.name}</option>
                           ))}
                       </select>
                   </div>
@@ -74,10 +76,8 @@ const Careers = () => {
     </section>
   );
 };
+
 export default Careers;
-
-
-
 
 
 
@@ -140,7 +140,7 @@ export default Careers;
 //     submitData.append('resume', resume); // File attach kar di
 
 //     try {
-//       const res = await axios.post('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/careers/apply', submitData, {
+//       const res = await axios.post('${import.meta.env.VITE_API_URL}/api/careers/apply', submitData, {
 //         headers: {
 //           'Content-Type': 'multipart/form-data' // Ye browser ko batata hai ki file ja rahi hai
 //         }

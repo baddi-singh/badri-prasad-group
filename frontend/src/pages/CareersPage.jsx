@@ -1,50 +1,51 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
+import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { useCompanies } from '../context/CompanyContext'; // 🔥 IMPORTED GLOBAL DATA
 
 const CareersPage = () => {
   const [formData, setFormData] = useState({ fullName: '', email: '', phone: '', targetCompany: '', role: '' });
   const [resume, setResume] = useState(null);
-  const [companies, setCompanies] = useState([]); 
+  const [status, setStatus] = useState('');
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchCompanies = async () => {
-      try {
-        const res = await axios.get('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/companies');
-        setCompanies(res.data.data);
-      } catch (err) {
-        console.error("Failed to fetch companies", err);
-      }
-    };
-    fetchCompanies();
-  }, []);
+  const { companies } = useCompanies(); // 🔥 LIVE DATA SE DROPDOWN CHALEGA
 
-  const handleSubmit = async (e) => {
+  const { fullName, email, phone, targetCompany, role } = formData;
+  const onChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const onFileChange = (e) => setResume(e.target.files[0]);
+
+  const onSubmit = async (e) => {
     e.preventDefault();
-    if (!resume) return alert("Please upload a PDF resume.");
-    
     setLoading(true);
-    const data = new FormData();
-    Object.keys(formData).forEach(key => data.append(key, formData[key]));
-    data.append('resume', resume); // PDF Attach ho gayi
+    setStatus('Submitting Application...');
+
+    if (!resume) {
+      setStatus('❌ Please upload your resume (PDF only).');
+      setLoading(false);
+      return;
+    }
+
+    const submitData = new FormData();
+    submitData.append('fullName', fullName); submitData.append('email', email);
+    submitData.append('phone', phone); submitData.append('targetCompany', targetCompany);
+    submitData.append('role', role); submitData.append('resume', resume);
 
     try {
-      // BUG FIX: Removed manual 'Content-Type' header. Axios + Browser will handle the boundary automatically.
-      await axios.post('[https://badri-backend.onrender.com](https://badri-backend.onrender.com)/api/careers', data);
-      
-      alert('Application Submitted Successfully!');
-      
-      // Clear Form & File State
-      setFormData({ fullName: '', email: '', phone: '', targetCompany: '', role: '' });
-      setResume(null);
-      // Clear the actual file input field visually
-      const fileInput = document.getElementById('resume-upload-input');
-      if (fileInput) fileInput.value = '';
+      // 🔥 FIX: Backticks use kiye hain yahan!
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/careers`, submitData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
 
+      if (res.data.success) {
+        setStatus('✅ Application Submitted Successfully!');
+        setFormData({ fullName: '', email: '', phone: '', targetCompany: '', role: '' });
+        setResume(null);
+        document.getElementById('resume-upload-page').value = '';
+      }
     } catch (err) {
-      console.error("Application Error:", err);
-      alert(`Failed to submit application: ${err.response?.data?.message || 'Server Error'}`);
+      setStatus(`❌ Submission Failed: ${err.response?.data?.message || 'Try again.'}`);
     } finally {
       setLoading(false);
     }
@@ -52,61 +53,50 @@ const CareersPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col justify-between" style={{ background: '#050505' }}>
-      <div className="pt-10 pb-20">
-        <section style={{ padding: '100px 5%', color: '#fff' }}>
-          <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+      <Navbar />
+      
+      <div className="pt-20 pb-20">
+        <section className="container animate-up" style={{ padding: '80px 5%', color: '#fff' }}>
+          <div style={{ maxWidth: '800px', margin: '0 auto' }}>
             <span style={{ color: '#D4AF37', fontSize: '12px', letterSpacing: '2px', textTransform: 'uppercase' }}>Join The Vision</span>
-            <h1 style={{ fontSize: '40px', fontWeight: 'bold', marginBottom: '40px' }}>Build The Future.</h1>
-            
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <input 
-                type="text" placeholder="Full Name" required
-                value={formData.fullName} onChange={(e) => setFormData({...formData, fullName: e.target.value})}
-                style={{ background: '#111', border: '1px solid #333', color: '#fff', padding: '15px', borderRadius: '6px' }}
-              />
-              
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                <input 
-                  type="email" placeholder="Email Address" required
-                  value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})}
-                  style={{ background: '#111', border: '1px solid #333', color: '#fff', padding: '15px', borderRadius: '6px' }}
-                />
-                <input 
-                  type="tel" placeholder="Phone Number" required
-                  value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                  style={{ background: '#111', border: '1px solid #333', color: '#fff', padding: '15px', borderRadius: '6px' }}
-                />
-              </div>
+            <h1 style={{ fontSize: '40px', fontWeight: 'bold', marginBottom: '20px' }}>Build The Future.</h1>
+            <p style={{ color: '#aaa', marginBottom: '40px', lineHeight: '1.6' }}>
+              We are always looking for exceptional talent to join our ecosystem. Select a vertical and upload your portfolio or resume to initiate the process.
+            </p>
 
-              <select 
-                required value={formData.targetCompany} onChange={(e) => setFormData({...formData, targetCompany: e.target.value})}
-                style={{ background: '#111', border: '1px solid #333', color: '#fff', padding: '15px', borderRadius: '6px', appearance: 'auto' }}
-              >
-                <option value="">Select Target Company...</option>
-                {companies.map(comp => (
-                  <option key={comp._id} value={comp.name}>{comp.name}</option>
-                ))}
-              </select>
+            {status && <p style={{ color: status.includes('✅') ? '#00e5ff' : '#ff4d4d', marginBottom: '20px', fontWeight: 'bold' }}>{status}</p>}
 
-              <input 
-                type="text" placeholder="Desired Role" required
-                value={formData.role} onChange={(e) => setFormData({...formData, role: e.target.value})}
-                style={{ background: '#111', border: '1px solid #333', color: '#fff', padding: '15px', borderRadius: '6px' }}
-              />
+            <div className="about-glass-box" style={{ padding: '40px', background: '#111', borderRadius: '12px', border: '1px solid #222' }}>
+              <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                <input type="text" name="fullName" value={fullName} onChange={onChange} placeholder="Full Name" required style={{ background: '#0a0a0a', border: '1px solid #333', color: '#fff', padding: '15px', borderRadius: '6px' }} />
 
-              <div style={{ background: '#111', border: '1px dashed #D4AF37', padding: '15px', borderRadius: '6px', textAlign: 'center' }}>
-                <label style={{ cursor: 'pointer', color: '#D4AF37' }}>
-                  📎 Click to Upload Resume (PDF Only)
-                  {/* BUG FIX: Added ID so we can clear it properly after submission */}
-                  <input id="resume-upload-input" type="file" accept=".pdf" required onChange={(e) => setResume(e.target.files[0])} style={{ display: 'none' }} />
-                </label>
-                {resume && <div style={{ marginTop: '10px', fontSize: '12px', color: '#00e5ff' }}>{resume.name}</div>}
-              </div>
-              
-              <button type="submit" disabled={loading} style={{ background: 'transparent', border: '1px solid #D4AF37', color: '#D4AF37', padding: '15px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', opacity: loading ? 0.7 : 1 }}>
-                {loading ? 'SUBMITTING...' : 'SUBMIT APPLICATION'}
-              </button>
-            </form>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
+                  <input type="email" name="email" value={email} onChange={onChange} placeholder="Email Address" required style={{ background: '#0a0a0a', border: '1px solid #333', color: '#fff', padding: '15px', borderRadius: '6px' }} />
+                  <input type="text" name="phone" value={phone} onChange={onChange} placeholder="Phone Number" required style={{ background: '#0a0a0a', border: '1px solid #333', color: '#fff', padding: '15px', borderRadius: '6px' }} />
+                </div>
+
+                <select name="targetCompany" value={targetCompany} onChange={onChange} required style={{ background: '#0a0a0a', border: '1px solid #333', color: '#fff', padding: '15px', borderRadius: '6px', appearance: 'auto' }}>
+                  <option value="">Select Vertical / Subsidiary...</option>
+                  {/* 🔥 DYNAMIC DROPDOWN FROM CONTEXT */}
+                  {companies?.map((comp) => (
+                    <option key={comp._id} value={comp.name}>{comp.name}</option>
+                  ))}
+                </select>
+
+                <input type="text" name="role" value={role} onChange={onChange} placeholder="Desired Role" required style={{ background: '#0a0a0a', border: '1px solid #333', color: '#fff', padding: '15px', borderRadius: '6px' }} />
+
+                <div style={{ border: '1px dashed #d4af37', padding: '20px', borderRadius: '6px', textAlign: 'center', background: '#0a0a0a' }}>
+                  <label style={{ color: '#ccc', cursor: 'pointer', display: 'block', fontWeight: 'bold' }}>
+                    {resume ? `📄 ${resume.name}` : '📎 Click to Upload Resume (PDF Only)'}
+                    <input type="file" id="resume-upload-page" name="resume" accept=".pdf" onChange={onFileChange} style={{ display: 'none' }} required />
+                  </label>
+                </div>
+
+                <button type="submit" disabled={loading} style={{ background: 'transparent', border: '1px solid #D4AF37', color: '#D4AF37', padding: '15px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', marginTop: '10px' }}>
+                  {loading ? 'SUBMITTING APPLICATION...' : 'SUBMIT APPLICATION'}
+                </button>
+              </form>
+            </div>
           </div>
         </section>
       </div>
@@ -116,3 +106,132 @@ const CareersPage = () => {
 };
 
 export default CareersPage;
+
+
+
+
+
+
+
+
+
+
+
+// import React, { useState, useEffect } from 'react';
+// import axios from 'axios';
+// import Footer from '../components/Footer';
+
+// const CareersPage = () => {
+//   const [formData, setFormData] = useState({ fullName: '', email: '', phone: '', targetCompany: '', role: '' });
+//   const [resume, setResume] = useState(null);
+//   const [companies, setCompanies] = useState([]); 
+//   const [loading, setLoading] = useState(false);
+
+//   useEffect(() => {
+//     const fetchCompanies = async () => {
+//       try {
+//         const res = await axios.get('${import.meta.env.VITE_API_URL}/api/companies');
+//         setCompanies(res.data.data);
+//       } catch (err) {
+//         console.error("Failed to fetch companies", err);
+//       }
+//     };
+//     fetchCompanies();
+//   }, []);
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     if (!resume) return alert("Please upload a PDF resume.");
+    
+//     setLoading(true);
+//     const data = new FormData();
+//     Object.keys(formData).forEach(key => data.append(key, formData[key]));
+//     data.append('resume', resume); // PDF Attach ho gayi
+
+//     try {
+//       // BUG FIX: Removed manual 'Content-Type' header. Axios + Browser will handle the boundary automatically.
+//       await axios.post('${import.meta.env.VITE_API_URL}/api/careers', data);
+      
+//       alert('Application Submitted Successfully!');
+      
+//       // Clear Form & File State
+//       setFormData({ fullName: '', email: '', phone: '', targetCompany: '', role: '' });
+//       setResume(null);
+//       // Clear the actual file input field visually
+//       const fileInput = document.getElementById('resume-upload-input');
+//       if (fileInput) fileInput.value = '';
+
+//     } catch (err) {
+//       console.error("Application Error:", err);
+//       alert(`Failed to submit application: ${err.response?.data?.message || 'Server Error'}`);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   return (
+//     <div className="min-h-screen flex flex-col justify-between" style={{ background: '#050505' }}>
+//       <div className="pt-10 pb-20">
+//         <section style={{ padding: '100px 5%', color: '#fff' }}>
+//           <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+//             <span style={{ color: '#D4AF37', fontSize: '12px', letterSpacing: '2px', textTransform: 'uppercase' }}>Join The Vision</span>
+//             <h1 style={{ fontSize: '40px', fontWeight: 'bold', marginBottom: '40px' }}>Build The Future.</h1>
+            
+//             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+//               <input 
+//                 type="text" placeholder="Full Name" required
+//                 value={formData.fullName} onChange={(e) => setFormData({...formData, fullName: e.target.value})}
+//                 style={{ background: '#111', border: '1px solid #333', color: '#fff', padding: '15px', borderRadius: '6px' }}
+//               />
+              
+//               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+//                 <input 
+//                   type="email" placeholder="Email Address" required
+//                   value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})}
+//                   style={{ background: '#111', border: '1px solid #333', color: '#fff', padding: '15px', borderRadius: '6px' }}
+//                 />
+//                 <input 
+//                   type="tel" placeholder="Phone Number" required
+//                   value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})}
+//                   style={{ background: '#111', border: '1px solid #333', color: '#fff', padding: '15px', borderRadius: '6px' }}
+//                 />
+//               </div>
+
+//               <select 
+//                 required value={formData.targetCompany} onChange={(e) => setFormData({...formData, targetCompany: e.target.value})}
+//                 style={{ background: '#111', border: '1px solid #333', color: '#fff', padding: '15px', borderRadius: '6px', appearance: 'auto' }}
+//               >
+//                 <option value="">Select Target Company...</option>
+//                 {companies.map(comp => (
+//                   <option key={comp._id} value={comp.name}>{comp.name}</option>
+//                 ))}
+//               </select>
+
+//               <input 
+//                 type="text" placeholder="Desired Role" required
+//                 value={formData.role} onChange={(e) => setFormData({...formData, role: e.target.value})}
+//                 style={{ background: '#111', border: '1px solid #333', color: '#fff', padding: '15px', borderRadius: '6px' }}
+//               />
+
+//               <div style={{ background: '#111', border: '1px dashed #D4AF37', padding: '15px', borderRadius: '6px', textAlign: 'center' }}>
+//                 <label style={{ cursor: 'pointer', color: '#D4AF37' }}>
+//                   📎 Click to Upload Resume (PDF Only)
+//                   {/* BUG FIX: Added ID so we can clear it properly after submission */}
+//                   <input id="resume-upload-input" type="file" accept=".pdf" required onChange={(e) => setResume(e.target.files[0])} style={{ display: 'none' }} />
+//                 </label>
+//                 {resume && <div style={{ marginTop: '10px', fontSize: '12px', color: '#00e5ff' }}>{resume.name}</div>}
+//               </div>
+              
+//               <button type="submit" disabled={loading} style={{ background: 'transparent', border: '1px solid #D4AF37', color: '#D4AF37', padding: '15px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', opacity: loading ? 0.7 : 1 }}>
+//                 {loading ? 'SUBMITTING...' : 'SUBMIT APPLICATION'}
+//               </button>
+//             </form>
+//           </div>
+//         </section>
+//       </div>
+//       <Footer />
+//     </div>
+//   );
+// };
+
+// export default CareersPage;
