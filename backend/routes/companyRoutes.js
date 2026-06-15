@@ -2,10 +2,11 @@ const express = require('express');
 const router = express.Router();
 const Company = require('../models/Company');
 
-// 1. Sabhi Companies ki list lana (Active only)
+// 1. Sabhi Companies ki list lana (Sorted by Priority First, then Latest)
 router.get('/', async (req, res) => {
   try {
-    const companies = await Company.find({ isDeleted: false }).sort({ createdAt: -1 });
+    // 🔥 Yahan humne .sort({ priority: 1, createdAt: -1 }) kar diya hai
+    const companies = await Company.find({ isDeleted: false }).sort({ priority: 1, createdAt: -1 });
     res.json({ success: true, data: companies });
   } catch (err) { res.status(500).json({ success: false, message: err.message }); }
 });
@@ -34,6 +35,24 @@ router.patch('/:id/trash', async (req, res) => {
   } catch (err) { res.status(500).json({ success: false, message: err.message }); }
 });
 
+// ==========================================
+// 🔥 NEW: ONE-TIME FIX ROUTE FOR EXISTING DB RECORDS
+// ==========================================
+router.get('/fix-order', async (req, res) => {
+  try {
+    // Yeh route hit karte hi aapke DB me maujood in 5 companies ko automatic number assign ho jayega
+    await Company.findOneAndUpdate({ name: "Badri Digital Solutions" }, { priority: 1 });
+    await Company.findOneAndUpdate({ name: "Social Tailor & Textiles" }, { priority: 2 });
+    await Company.findOneAndUpdate({ name: "Badri Media" }, { priority: 3 });
+    await Company.findOneAndUpdate({ name: "Badri Tour & Travels" }, { priority: 4 });
+    await Company.findOneAndUpdate({ name: "Badri Smart Integrations" }, { priority: 5 });
+    
+    res.json({ success: true, message: "✅ Success! Priority order updated for existing companies in Database." });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 
 // ==========================================
 // MAGIC SEED ROUTE (Sari purani companies DB me daalne ke liye)
@@ -41,21 +60,20 @@ router.patch('/:id/trash', async (req, res) => {
 router.get('/seed', async (req, res) => {
   try {
     const seedData = [
-      { name: "Badri Digital Solutions", vertical: "TECHNOLOGY", status: "Operational", desc: "Next-generation IoT and AI-driven automation solutions for enterprise ecosystems." },
-      { name: "Badri Smart Integrations", vertical: "TECHNOLOGY", status: "Operational", desc: "Pioneering smart home systems and corporate security automation." },
+      { name: "Badri Digital Solutions", vertical: "TECHNOLOGY", status: "Operational", desc: "Next-generation IoT and AI-driven automation solutions for enterprise ecosystems.", priority: 1 },
+      { name: "Badri Smart Integrations", vertical: "TECHNOLOGY", status: "Operational", desc: "Pioneering smart home systems and corporate security automation.", priority: 5 },
       { name: "Badri Real Estate", vertical: "INFRASTRUCTURE", status: "Operational", desc: "Redefining luxury living and commercial spaces with sustainable architecture." },
       { name: "Badri Travels", vertical: "HOSPITALITY", status: "Operational", desc: "Premium global travel experiences, corporate fleet management, and luxury staycations." },
       { name: "Badri Venture Studio", vertical: "INVESTMENT", status: "Growing", desc: "Incubating and funding disruptive tech startups reshaping tomorrow's digital economy." },
-      { name: "Social Tailors & Textile", vertical: "MEDIA & PR", status: "Operational", desc: "Crafting bespoke digital identities, brand narratives, and global PR campaigns." },
+      { name: "Social Tailors & Textile", vertical: "MEDIA & PR", status: "Operational", desc: "Crafting bespoke digital identities, brand narratives, and global PR campaigns.", priority: 2 },
       { name: "Badri Capital", vertical: "FINANCIAL SERVICES", status: "Operational", desc: "Strategic wealth management, equity investments, and corporate finance solutions." },
       { name: "Badri Healthcare", vertical: "HEALTHCARE", status: "Growing", desc: "Advanced medical facilities, telemedicine, and accessible healthcare innovations." },
       { name: "Badri Logistics", vertical: "SUPPLY CHAIN", status: "Operational", desc: "Global supply chain solutions, smart warehousing, and efficient freight management." },
       { name: "Badri Energy", vertical: "RENEWABLE ENERGY", status: "Growing", desc: "Pioneering sustainable energy solutions, solar infrastructure, and green tech." },
       { name: "Badri Education", vertical: "EDTECH", status: "Operational", desc: "Empowering the next generation with modern educational platforms and digital learning." },
-      { name: "Badri Media", vertical: "BROADCASTING", status: "Operational", desc: "Delivering high-quality entertainment, digital content, and media broadcasting." }
+      { name: "Badri Media", vertical: "BROADCASTING", status: "Operational", desc: "Delivering high-quality entertainment, digital content, and media broadcasting.", priority: 3 }
     ];
 
-    // Check agar DB pehle se bhara toh nahi hai
     const count = await Company.countDocuments();
     if (count === 0) {
       await Company.insertMany(seedData);
@@ -67,6 +85,5 @@ router.get('/seed', async (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 });
-
 
 module.exports = router;
