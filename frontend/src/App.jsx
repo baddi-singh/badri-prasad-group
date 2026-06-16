@@ -14,6 +14,7 @@ import CareersPage from './pages/CareersPage';
 import LeadershipPage from './pages/LeadershipPage';
 import VenturesPage from './pages/VenturesPage';
 import NewsroomPage from './pages/NewsroomPage';
+import NewsDetail from './pages/NewsDetail';
 import InvestorsPage from './pages/InvestorsPage';
 import AdminLogin from './pages/AdminLogin'; 
 import AdminDashboard from './pages/AdminDashboard';
@@ -39,6 +40,7 @@ function App() {
               <Route path="/leadership" element={<LeadershipPage />} />
               <Route path="/ventures" element={<VenturesPage />} /> 
               <Route path="/newsroom" element={<NewsroomPage />} />
+              <Route path="/newsroom/:id" element={<NewsDetail />} />
               <Route path="/investors" element={<InvestorsPage />} /> 
               <Route path="/page/sustainability" element={<Sustainability />} />
 
