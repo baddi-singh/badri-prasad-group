@@ -24,3 +24,8 @@ git push origin --tags
 git merge staging
 git push origin main
 ```
+
+
+
+
+06-devops/git-branching.md me branch policy likho: main, staging, dev, feature/*, hotfix/*
