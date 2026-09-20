@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { useCompanies } from '../context/CompanyContext'; // 🔥 IMPORTED GLOBAL DATA
+import { useCompanies } from '../context/CompanyContext'; // 🔥 LIVE DATA SE DROPDOWN CHALEGA
 
 const CareersPage = () => {
   const [formData, setFormData] = useState({ fullName: '', email: '', phone: '', targetCompany: '', role: '' });
@@ -10,7 +10,7 @@ const CareersPage = () => {
   const [status, setStatus] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const { companies } = useCompanies(); // 🔥 LIVE DATA SE DROPDOWN CHALEGA
+  const { companies } = useCompanies();
 
   const { fullName, email, phone, targetCompany, role } = formData;
   const onChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -19,23 +19,27 @@ const CareersPage = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setStatus('Submitting Application...');
+    setStatus('Submitting Application & Uploading Resume...');
 
     if (!resume) {
-      setStatus('❌ Please upload your resume (PDF only).');
+      setStatus(' Please upload your resume (PDF only).');
       setLoading(false);
       return;
     }
 
     const submitData = new FormData();
-    submitData.append('fullName', fullName); submitData.append('email', email);
-    submitData.append('phone', phone); submitData.append('targetCompany', targetCompany);
-    submitData.append('role', role); submitData.append('resume', resume);
+    submitData.append('fullName', fullName); 
+    submitData.append('email', email);
+    submitData.append('phone', phone); 
+    submitData.append('targetCompany', targetCompany);
+    submitData.append('role', role); 
+    submitData.append('resume', resume);
 
     try {
-      // 🔥 FIX: Backticks use kiye hain yahan!
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/careers`, submitData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+      // 🔥 FIX: API path ekdum correct hai
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/careers`, submitData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        withCredentials: true 
       });
 
       if (res.data.success) {
@@ -45,7 +49,7 @@ const CareersPage = () => {
         document.getElementById('resume-upload-page').value = '';
       }
     } catch (err) {
-      setStatus(`❌ Submission Failed: ${err.response?.data?.message || 'Try again.'}`);
+      setStatus(` Submission Failed: ${err.response?.data?.message || err.message}`);
     } finally {
       setLoading(false);
     }
@@ -59,7 +63,7 @@ const CareersPage = () => {
         <section className="container animate-up" style={{ padding: '80px 5%', color: '#fff' }}>
           <div style={{ maxWidth: '800px', margin: '0 auto' }}>
             <span style={{ color: '#D4AF37', fontSize: '12px', letterSpacing: '2px', textTransform: 'uppercase' }}>Join The Vision</span>
-            <h1 style={{ fontSize: '40px', fontWeight: 'bold', marginBottom: '20px' }}>Build The Future.</h1>
+            <h1 style={{ fontSize: '40px', fontWeight: 'bold', margin: '0 0 20px 0' }}>Build The Future.</h1>
             <p style={{ color: '#aaa', marginBottom: '40px', lineHeight: '1.6' }}>
               We are always looking for exceptional talent to join our ecosystem. Select a vertical and upload your portfolio or resume to initiate the process.
             </p>
@@ -77,7 +81,7 @@ const CareersPage = () => {
 
                 <select name="targetCompany" value={targetCompany} onChange={onChange} required style={{ background: '#0a0a0a', border: '1px solid #333', color: '#fff', padding: '15px', borderRadius: '6px', appearance: 'auto' }}>
                   <option value="">Select Vertical / Subsidiary...</option>
-                  {/* 🔥 DYNAMIC DROPDOWN FROM CONTEXT */}
+                  {/* DYNAMIC DROPDOWN FROM CONTEXT */}
                   {companies?.map((comp) => (
                     <option key={comp._id} value={comp.name}>{comp.name}</option>
                   ))}
@@ -106,6 +110,239 @@ const CareersPage = () => {
 };
 
 export default CareersPage;
+
+
+
+
+
+
+
+
+// Isme maine URL mein /api confirm kar diya hai aur global Ecosystem context se Live dropdown ko barkarar rakha hai)
+// import React, { useState } from 'react';
+// import axios from 'axios';
+// import Navbar from '../components/Navbar';
+// import Footer from '../components/Footer';
+// import { useCompanies } from '../context/CompanyContext';
+
+// const CareersPage = () => {
+//   const [formData, setFormData] = useState({ fullName: '', email: '', phone: '', targetCompany: '', role: '' });
+//   const [resume, setResume] = useState(null);
+//   const [status, setStatus] = useState('');
+//   const [loading, setLoading] = useState(false);
+
+//   const { companies } = useCompanies();
+
+//   const { fullName, email, phone, targetCompany, role } = formData;
+//   const onChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+//   const onFileChange = (e) => setResume(e.target.files[0]);
+
+//   const onSubmit = async (e) => {
+//     e.preventDefault();
+//     setLoading(true);
+//     setStatus('Submitting Application...');
+
+//     if (!resume) {
+//       setStatus(' Please upload your resume (PDF only).');
+//       setLoading(false);
+//       return;
+//     }
+
+//     const submitData = new FormData();
+//     submitData.append('fullName', fullName); 
+//     submitData.append('email', email);
+//     submitData.append('phone', phone); 
+//     submitData.append('targetCompany', targetCompany);
+//     submitData.append('role', role); 
+//     submitData.append('resume', resume);
+
+//     try {
+//       // 🔥 DEVIL FIX: Ensure request is correctly sent to backend
+//       const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/careers`, submitData, {
+//         headers: { 'Content-Type': 'multipart/form-data' },
+//         withCredentials: true 
+//       });
+
+//       if (res.data.success) {
+//         setStatus('✅ Application Submitted Successfully!');
+//         setFormData({ fullName: '', email: '', phone: '', targetCompany: '', role: '' });
+//         setResume(null);
+//         document.getElementById('resume-upload-page').value = '';
+//       }
+//     } catch (err) {
+//       setStatus(` Submission Failed: ${err.response?.data?.message || err.message}`);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   return (
+//     <div className="min-h-screen flex flex-col justify-between" style={{ background: '#050505' }}>
+//       <Navbar />
+      
+//       <div className="pt-20 pb-20">
+//         <section className="container animate-up" style={{ padding: '80px 5%', color: '#fff' }}>
+//           <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+//             <span style={{ color: '#D4AF37', fontSize: '12px', letterSpacing: '2px', textTransform: 'uppercase' }}>Join The Vision</span>
+//             <h1 style={{ fontSize: '40px', fontWeight: 'bold', margin: '0 0 20px 0' }}>Build The Future.</h1>
+//             <p style={{ color: '#aaa', marginBottom: '40px', lineHeight: '1.6' }}>
+//               We are always looking for exceptional talent to join our ecosystem. Select a vertical and upload your portfolio or resume to initiate the process.
+//             </p>
+
+//             {status && <p style={{ color: status.includes('✅') ? '#00e5ff' : '#ff4d4d', marginBottom: '20px', fontWeight: 'bold' }}>{status}</p>}
+
+//             <div className="about-glass-box" style={{ padding: '40px', background: '#111', borderRadius: '12px', border: '1px solid #222' }}>
+//               <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+//                 <input type="text" name="fullName" value={fullName} onChange={onChange} placeholder="Full Name" required style={{ background: '#0a0a0a', border: '1px solid #333', color: '#fff', padding: '15px', borderRadius: '6px' }} />
+
+//                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
+//                   <input type="email" name="email" value={email} onChange={onChange} placeholder="Email Address" required style={{ background: '#0a0a0a', border: '1px solid #333', color: '#fff', padding: '15px', borderRadius: '6px' }} />
+//                   <input type="text" name="phone" value={phone} onChange={onChange} placeholder="Phone Number" required style={{ background: '#0a0a0a', border: '1px solid #333', color: '#fff', padding: '15px', borderRadius: '6px' }} />
+//                 </div>
+
+//                 <select name="targetCompany" value={targetCompany} onChange={onChange} required style={{ background: '#0a0a0a', border: '1px solid #333', color: '#fff', padding: '15px', borderRadius: '6px', appearance: 'auto' }}>
+//                   <option value="">Select Vertical / Subsidiary...</option>
+//                   {companies?.map((comp) => (
+//                     <option key={comp._id} value={comp.name}>{comp.name}</option>
+//                   ))}
+//                 </select>
+
+//                 <input type="text" name="role" value={role} onChange={onChange} placeholder="Desired Role" required style={{ background: '#0a0a0a', border: '1px solid #333', color: '#fff', padding: '15px', borderRadius: '6px' }} />
+
+//                 <div style={{ border: '1px dashed #d4af37', padding: '20px', borderRadius: '6px', textAlign: 'center', background: '#0a0a0a' }}>
+//                   <label style={{ color: '#ccc', cursor: 'pointer', display: 'block', fontWeight: 'bold' }}>
+//                     {resume ? `📄 ${resume.name}` : '📎 Click to Upload Resume (PDF Only)'}
+//                     <input type="file" id="resume-upload-page" name="resume" accept=".pdf" onChange={onFileChange} style={{ display: 'none' }} required />
+//                   </label>
+//                 </div>
+
+//                 <button type="submit" disabled={loading} style={{ background: 'transparent', border: '1px solid #D4AF37', color: '#D4AF37', padding: '15px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', marginTop: '10px' }}>
+//                   {loading ? 'SUBMITTING APPLICATION...' : 'SUBMIT APPLICATION'}
+//                 </button>
+//               </form>
+//             </div>
+//           </div>
+//         </section>
+//       </div>
+//       <Footer />
+//     </div>
+//   );
+// };
+
+// export default CareersPage;
+
+
+
+
+// working code
+// import React, { useState } from 'react';
+// import axios from 'axios';
+// import Navbar from '../components/Navbar';
+// import Footer from '../components/Footer';
+// import { useCompanies } from '../context/CompanyContext'; // 🔥 IMPORTED GLOBAL DATA
+
+// const CareersPage = () => {
+//   const [formData, setFormData] = useState({ fullName: '', email: '', phone: '', targetCompany: '', role: '' });
+//   const [resume, setResume] = useState(null);
+//   const [status, setStatus] = useState('');
+//   const [loading, setLoading] = useState(false);
+
+//   const { companies } = useCompanies(); // 🔥 LIVE DATA SE DROPDOWN CHALEGA
+
+//   const { fullName, email, phone, targetCompany, role } = formData;
+//   const onChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+//   const onFileChange = (e) => setResume(e.target.files[0]);
+
+//   const onSubmit = async (e) => {
+//     e.preventDefault();
+//     setLoading(true);
+//     setStatus('Submitting Application...');
+
+//     if (!resume) {
+//       setStatus(' Please upload your resume (PDF only).');
+//       setLoading(false);
+//       return;
+//     }
+
+//     const submitData = new FormData();
+//     submitData.append('fullName', fullName); submitData.append('email', email);
+//     submitData.append('phone', phone); submitData.append('targetCompany', targetCompany);
+//     submitData.append('role', role); submitData.append('resume', resume);
+
+//     try {
+//       // 🔥 FIX: Backticks use kiye hain yahan!
+//       const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/careers`, submitData, {
+//         headers: { 'Content-Type': 'multipart/form-data' }
+//       });
+
+//       if (res.data.success) {
+//         setStatus('✅ Application Submitted Successfully!');
+//         setFormData({ fullName: '', email: '', phone: '', targetCompany: '', role: '' });
+//         setResume(null);
+//         document.getElementById('resume-upload-page').value = '';
+//       }
+//     } catch (err) {
+//       setStatus(` Submission Failed: ${err.response?.data?.message || 'Try again.'}`);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   return (
+//     <div className="min-h-screen flex flex-col justify-between" style={{ background: '#050505' }}>
+//       <Navbar />
+      
+//       <div className="pt-20 pb-20">
+//         <section className="container animate-up" style={{ padding: '80px 5%', color: '#fff' }}>
+//           <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+//             <span style={{ color: '#D4AF37', fontSize: '12px', letterSpacing: '2px', textTransform: 'uppercase' }}>Join The Vision</span>
+//             <h1 style={{ fontSize: '40px', fontWeight: 'bold', marginBottom: '20px' }}>Build The Future.</h1>
+//             <p style={{ color: '#aaa', marginBottom: '40px', lineHeight: '1.6' }}>
+//               We are always looking for exceptional talent to join our ecosystem. Select a vertical and upload your portfolio or resume to initiate the process.
+//             </p>
+
+//             {status && <p style={{ color: status.includes('✅') ? '#00e5ff' : '#ff4d4d', marginBottom: '20px', fontWeight: 'bold' }}>{status}</p>}
+
+//             <div className="about-glass-box" style={{ padding: '40px', background: '#111', borderRadius: '12px', border: '1px solid #222' }}>
+//               <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+//                 <input type="text" name="fullName" value={fullName} onChange={onChange} placeholder="Full Name" required style={{ background: '#0a0a0a', border: '1px solid #333', color: '#fff', padding: '15px', borderRadius: '6px' }} />
+
+//                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
+//                   <input type="email" name="email" value={email} onChange={onChange} placeholder="Email Address" required style={{ background: '#0a0a0a', border: '1px solid #333', color: '#fff', padding: '15px', borderRadius: '6px' }} />
+//                   <input type="text" name="phone" value={phone} onChange={onChange} placeholder="Phone Number" required style={{ background: '#0a0a0a', border: '1px solid #333', color: '#fff', padding: '15px', borderRadius: '6px' }} />
+//                 </div>
+
+//                 <select name="targetCompany" value={targetCompany} onChange={onChange} required style={{ background: '#0a0a0a', border: '1px solid #333', color: '#fff', padding: '15px', borderRadius: '6px', appearance: 'auto' }}>
+//                   <option value="">Select Vertical / Subsidiary...</option>
+//                   {/* 🔥 DYNAMIC DROPDOWN FROM CONTEXT */}
+//                   {companies?.map((comp) => (
+//                     <option key={comp._id} value={comp.name}>{comp.name}</option>
+//                   ))}
+//                 </select>
+
+//                 <input type="text" name="role" value={role} onChange={onChange} placeholder="Desired Role" required style={{ background: '#0a0a0a', border: '1px solid #333', color: '#fff', padding: '15px', borderRadius: '6px' }} />
+
+//                 <div style={{ border: '1px dashed #d4af37', padding: '20px', borderRadius: '6px', textAlign: 'center', background: '#0a0a0a' }}>
+//                   <label style={{ color: '#ccc', cursor: 'pointer', display: 'block', fontWeight: 'bold' }}>
+//                     {resume ? `📄 ${resume.name}` : '📎 Click to Upload Resume (PDF Only)'}
+//                     <input type="file" id="resume-upload-page" name="resume" accept=".pdf" onChange={onFileChange} style={{ display: 'none' }} required />
+//                   </label>
+//                 </div>
+
+//                 <button type="submit" disabled={loading} style={{ background: 'transparent', border: '1px solid #D4AF37', color: '#D4AF37', padding: '15px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', marginTop: '10px' }}>
+//                   {loading ? 'SUBMITTING APPLICATION...' : 'SUBMIT APPLICATION'}
+//                 </button>
+//               </form>
+//             </div>
+//           </div>
+//         </section>
+//       </div>
+//       <Footer />
+//     </div>
+//   );
+// };
+
+// export default CareersPage;
 
 
 

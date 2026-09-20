@@ -15,7 +15,7 @@ const InvestorsPage = () => {
   useEffect(() => {
     const fetchInvestorData = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/investors`);
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/investors`);
         if (res.data && res.data.success && res.data.data) {
           if (res.data.data.metrics) setMetrics(res.data.data.metrics);
           if (res.data.data.reports) setReports(res.data.data.reports);
@@ -31,7 +31,7 @@ const InvestorsPage = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/inquiries`, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/inquiries`, {
         name: formData.firm, email: formData.email, vertical: 'INVESTOR RELATIONS', message: formData.message
       });
       alert('Proposal Submitted Successfully. Our Strategy Desk will contact you shortly.');

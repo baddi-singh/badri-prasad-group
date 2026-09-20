@@ -10,7 +10,7 @@ const Leadership = () => {
   useEffect(() => {
     const fetchLeaders = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/leadership`);
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/leadership`);
         setLeaders(res.data.data || []);
         setLoading(false);
       } catch (err) {

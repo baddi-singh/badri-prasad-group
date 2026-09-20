@@ -11,8 +11,8 @@ const NewsroomPage = () => {
     const fetchNews = async () => {
       try {
         // 🔥 SABSE BADI GALTI YAHI THI: Yahan Backticks ( ` ` ) hone chahiye, Single Quotes (' ') nahi!
-        // Ab ye properly http://localhost:5001/api/news par jayega
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/news`);
+        // Ab ye properly ${API_BASE_URL}/api/news par jayega
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/news`);
         
         // 🔥 SAFETY CHECK: Agar data sahi format mein aaya hai, tabhi filter chalega (Page crash nahi hoga)
         if (res.data && res.data.success && Array.isArray(res.data.data)) {

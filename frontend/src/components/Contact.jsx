@@ -15,13 +15,13 @@ const Contact = () => {
     e.preventDefault();
     setStatus('Sending...');
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/inquiries`, formData);
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/inquiries`, formData);
       if (res.data.success) {
-        setStatus('✅ Inquiry Submitted Successfully!');
+        setStatus(' Inquiry Submitted Successfully!');
         setFormData({ name: '', email: '', vertical: '', message: '' });
       }
     } catch (err) {
-      setStatus(`❌ Submission Failed: ${err.response?.data?.message || err.message}`);
+      setStatus(` Submission Failed: ${err.response?.data?.message || err.message}`);
       console.error(err);
     }
   };
@@ -45,7 +45,7 @@ const Contact = () => {
                   <div className="form-group">
                       <select name="vertical" value={vertical} onChange={onChange} className="form-control" required>
                           <option value="">Select Vertical / Subsidiary...</option>
-                          {/* 🔥 DYNAMIC DROPDOWN ADMIN PANEL WALA */}
+                          {/*  DYNAMIC DROPDOWN ADMIN PANEL WALA */}
                           {companies?.map((comp, index) => (
                             <option key={index} value={comp.name}>{comp.name}</option>
                           ))}
