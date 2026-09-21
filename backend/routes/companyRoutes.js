@@ -26,7 +26,7 @@ router.post('/', protect, async (req, res) => {
 // 3. Company Update karna
 router.put('/:id', protect, async (req, res) => {
   try {
-    const updated = await Company.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const updated = await Company.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after' });
     res.json({ success: true, data: updated });
   } catch (err) { 
     res.status(500).json({ success: false, message: err.message }); 

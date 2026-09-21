@@ -1,3 +1,7 @@
+// 🔥 DEVIL FIX: Force Node.js to use IPv4 for outbound connections (Render IPv6 issue fix)
+const dns = require('dns');
+dns.setDefaultResultOrder('ipv4first');
+
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');

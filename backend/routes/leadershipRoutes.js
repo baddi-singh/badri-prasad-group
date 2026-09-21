@@ -26,7 +26,7 @@ router.post('/', protect, async (req, res) => {
 // PUT: Leader update karne ke liye (Edit) (🔒 LOCKED)
 router.put('/:id', protect, async (req, res) => {
   try {
-    const leader = await Leadership.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    const leader = await Leadership.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after', runValidators: true });
     if (!leader) return res.status(404).json({ success: false, message: 'Leader not found' });
     res.status(200).json({ success: true, data: leader });
   } catch (error) {
@@ -37,7 +37,7 @@ router.put('/:id', protect, async (req, res) => {
 // PATCH: Leader ko Trash mein daalne ke liye (🔒 LOCKED)
 router.patch('/:id/trash', protect, async (req, res) => {
   try {
-    const leader = await Leadership.findByIdAndUpdate(req.params.id, { isDeleted: true }, { new: true });
+    const leader = await Leadership.findByIdAndUpdate(req.params.id, { isDeleted: true }, { returnDocument: 'after' });
     res.status(200).json({ success: true, data: leader });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
@@ -47,7 +47,7 @@ router.patch('/:id/trash', protect, async (req, res) => {
 // PATCH: Trash se wapas laane ke liye (Restore) (🔒 LOCKED)
 router.patch('/:id/restore', protect, async (req, res) => {
   try {
-    const leader = await Leadership.findByIdAndUpdate(req.params.id, { isDeleted: false }, { new: true });
+    const leader = await Leadership.findByIdAndUpdate(req.params.id, { isDeleted: false }, { returnDocument: 'after' });
     res.status(200).json({ success: true, data: leader });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });

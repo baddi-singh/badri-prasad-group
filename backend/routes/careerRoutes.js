@@ -492,6 +492,7 @@ const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || 'smtp.hostinger.com',
   port: Number(process.env.SMTP_PORT) || 465,
   secure: process.env.SMTP_SECURE === 'false' ? false : true,
+  family: 4, // Force IPv4 to avoid potential IPv6 issues
   auth: {
     user: process.env.SMTP_EMAIL || 'contact@badriprasadgroup.com',
     pass: process.env.SMTP_PASSWORD

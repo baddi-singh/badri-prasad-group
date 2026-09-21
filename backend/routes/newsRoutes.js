@@ -38,7 +38,7 @@ router.post('/', protect, async (req, res) => {
 // Update news
 router.put('/:id', protect, async (req, res) => {
   try {
-    const updatedNews = await News.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const updatedNews = await News.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after' });
     res.json({ success: true, data: updatedNews });
   } catch (err) { 
     res.status(500).json({ success: false, message: err.message }); 
