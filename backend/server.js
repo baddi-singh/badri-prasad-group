@@ -10,6 +10,12 @@ dotenv.config();
 const app = express();
 
 // ==========================================
+// 🔥 DEVIL FIX 1: TRUST PROXY (Render logs warning fix)
+// ==========================================
+// Render load balancer ke peeche chalta hai. Iske bina rate limiter IP detect nahi kar paata.
+app.set('trust proxy', 1); 
+
+// ==========================================
 // MIDDLEWARES & SECURITY
 // ==========================================
 
@@ -53,7 +59,7 @@ app.use('/api', apiLimiter);
 app.use('/uploads', express.static('uploads')); 
 
 // ==========================================
-// DB CONNECTION (Asli Database ka naam print hoga)
+// DB CONNECTION
 // ==========================================
 mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/Local-BPG')
   .then((conn) => console.log(` MongoDB Connected to: ${conn.connection.name}`))
@@ -72,6 +78,86 @@ app.use('/api/leadership', require('./routes/leadershipRoutes'));
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Server running securely on port ${PORT}`));
+
+
+
+
+// running code 
+// const express = require('express');
+// const dotenv = require('dotenv');
+// const cors = require('cors');
+// const mongoose = require('mongoose');
+// const rateLimit = require('express-rate-limit');
+// const helmet = require('helmet');
+// const cookieParser = require('cookie-parser');
+
+// dotenv.config();
+// const app = express();
+
+// // ==========================================
+// // MIDDLEWARES & SECURITY
+// // ==========================================
+
+// const allowedOrigins = [
+//   'http://localhost:5173',
+//   'http://localhost:5001',
+//   'http://localhost:3000',
+//   'https://www.badriprasadgroup.com',
+//   'https://badriprasadgroup.com',
+//   'https://test.badriprasadgroup.com',
+//   'https://www.test.badriprasadgroup.com',
+//   'https://www.badridigitalsolutions.com',
+//   'https://badridigitalsolutions.com',
+//   'https://test.badridigitalsolutions.com'
+// ];
+
+// app.use(cors({
+//   origin: function (origin, callback) {
+//     if (!origin) return callback(null, true);
+    
+//     if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith('.vercel.app')) {
+//       return callback(null, true);
+//     } else {
+//       return callback(new Error('CORS Policy: This origin is not allowed access.'));
+//     }
+//   },
+//   credentials: true 
+// }));
+
+
+// app.use(helmet());
+// app.use(cookieParser()); 
+// app.use(express.json());
+
+// const apiLimiter = rateLimit({
+//   windowMs: 15 * 60 * 1000, 
+//   max: 200, 
+//   message: { success: false, message: "Too many requests from this IP. Please wait 15 minutes." }
+// });
+// app.use('/api', apiLimiter);
+
+// app.use('/uploads', express.static('uploads')); 
+
+// // ==========================================
+// // DB CONNECTION (Asli Database ka naam print hoga)
+// // ==========================================
+// mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/Local-BPG')
+//   .then((conn) => console.log(` MongoDB Connected to: ${conn.connection.name}`))
+//   .catch((err) => console.log('DB Error:', err));
+
+// // ==========================================
+// // ROUTES
+// // ==========================================
+// app.use('/api/inquiries', require('./routes/inquiryRoutes'));
+// app.use('/api/careers', require('./routes/careerRoutes')); 
+// app.use('/api/admin', require('./routes/adminRoutes')); 
+// app.use('/api/companies', require('./routes/companyRoutes')); 
+// app.use('/api/news', require('./routes/newsRoutes'));
+// app.use('/api/investors', require('./routes/investorRoutes'));
+// app.use('/api/leadership', require('./routes/leadershipRoutes'));
+
+// const PORT = process.env.PORT || 5001;
+// app.listen(PORT, () => console.log(`Server running securely on port ${PORT}`));
 
 
 
