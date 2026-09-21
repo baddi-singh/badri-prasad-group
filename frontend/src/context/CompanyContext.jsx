@@ -447,8 +447,58 @@
 
 
 
+// import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
+// import axios from 'axios';
+
+// const CompanyContext = createContext();
+
+// export const CompanyProvider = ({ children }) => {
+//   const [companies, setCompanies] = useState([]);
+//   const [loading, setLoading] = useState(true);
+
+//   // useCallback ensures function reference stays same unless dependencies change
+//   const fetchCompanies = useCallback(async () => {
+//     try {
+//       const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/companies`);
+//       if (res.data && res.data.success) {
+//         setCompanies(res.data.data);
+//       }
+//     } catch (err) {
+//       console.error("Global Fetch Error:", err);
+//     } finally {
+//       setLoading(false);
+//     }
+//   }, []);
+
+//   useEffect(() => {
+//     // 🔥 Fix for ESLint: react-hooks/set-state-in-effect
+//     // eslint-disable-next-line react-hooks/set-state-in-effect
+//     fetchCompanies();
+//   }, [fetchCompanies]);
+
+//   return (
+//     <CompanyContext.Provider value={{ companies, loading, refreshCompanies: fetchCompanies }}>
+//       {children}
+//     </CompanyContext.Provider>
+//   );
+// };
+
+// // Fix for Vite Fast Refresh: react-refresh/only-export-components
+// // eslint-disable-next-line react-refresh/only-export-components
+// export const useCompanies = () => useContext(CompanyContext);
+
+
+
+
+
+
+
+
+
+
+
 import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
-import axios from 'axios';
+import api from '../api/axios'; // 🔥 DEVIL FIX: Raw axios ki jagah apna custom api instance import kiya
 
 const CompanyContext = createContext();
 
@@ -458,13 +508,19 @@ export const CompanyProvider = ({ children }) => {
 
   // useCallback ensures function reference stays same unless dependencies change
   const fetchCompanies = useCallback(async () => {
+    setLoading(true); // Loading state true karo jab fetch shuru ho
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/companies`);
+      // 🔥 DEVIL FIX: api instance use kiya, baseURL aur cookies automatic handle honge
+      const res = await api.get('/api/companies');
+      
       if (res.data && res.data.success) {
         setCompanies(res.data.data);
+      } else {
+        setCompanies([]); // Agar success false hai toh empty array set karo
       }
     } catch (err) {
       console.error("Global Fetch Error:", err);
+      setCompanies([]); // Error aane par UI crash na ho, isliye empty array
     } finally {
       setLoading(false);
     }
