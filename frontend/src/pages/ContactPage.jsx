@@ -14,7 +14,7 @@ const ContactPage = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/inquiries`, formData);
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/inquiries`, formData);
       alert('Inquiry Submitted Successfully!');
       setFormData({ name: '', email: '', vertical: '', message: '' });
     } catch (err) {

@@ -7,7 +7,7 @@ const Careers = () => {
   const [resume, setResume] = useState(null);
   const [status, setStatus] = useState('');
 
-  const { companies } = useCompanies(); // 🔥 LIVE DATA FROM ADMIN DASHBOARD
+  const { companies } = useCompanies(); //  LIVE DATA FROM ADMIN DASHBOARD
 
   const { fullName, email, phone, targetCompany, role } = formData;
   const onChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -16,7 +16,7 @@ const Careers = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     setStatus('Submitting Application...');
-    if (!resume) { setStatus('❌ Please upload your resume (PDF only).'); return; }
+    if (!resume) { setStatus(' Please upload your resume (PDF only).'); return; }
 
     const submitData = new FormData();
     submitData.append('fullName', fullName); submitData.append('email', email);
@@ -24,16 +24,16 @@ const Careers = () => {
     submitData.append('role', role); submitData.append('resume', resume);
 
     try {
-      // 🔥 FIX: Single Quotes (') hata kar Backticks (`) lagaye hain
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/careers`, submitData, { headers: { 'Content-Type': 'multipart/form-data' } });
+      //  FIX: Single Quotes (') hata kar Backticks (`) lagaye hain
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/careers`, submitData, { headers: { 'Content-Type': 'multipart/form-data' } });
       
       if (res.data.success) {
-        setStatus('✅ Application Submitted Successfully!');
+        setStatus(' Application Submitted Successfully!');
         setFormData({ fullName: '', email: '', phone: '', targetCompany: '', role: '' });
         setResume(null); document.getElementById('resume-upload').value = '';
       }
     } catch (err) {
-      setStatus(`❌ Submission Failed: ${err.response?.data?.message || 'Try again.'}`);
+      setStatus(` Submission Failed: ${err.response?.data?.message || 'Try again.'}`);
     }
   };
 

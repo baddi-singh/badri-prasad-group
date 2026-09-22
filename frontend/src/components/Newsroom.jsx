@@ -10,7 +10,7 @@ const Newsroom = () => {
     const fetchNews = async () => {
       try {
         // 🔥 FIX: Live Database se News fetch kar rahe hain
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/news`);
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/news`);
         
         if (res.data && res.data.success) {
           // Jo news Delete (Trash) nahi hui hain, sirf wahi dikhayenge

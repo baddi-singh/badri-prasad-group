@@ -1,20 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const News = require('../models/News');
+const { protect } = require('../middleware/authMiddleware');
 
-// Get ALL news (Active + Trashed dono bheje ga)
+// Get ALL news (Sirf active news)
 router.get('/', async (req, res) => {
   try {
-    const news = await News.find().sort({ createdAt: -1 }); // FIX: Yahan se filter hata diya
+    const news = await News.find({ isDeleted: false }).sort({ createdAt: -1 });
     res.json({ success: true, data: news });
-  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+  } catch (err) { 
+    res.status(500).json({ success: false, message: err.message }); 
+  }
 });
 
-// Get Single News by ID (🔥 Naya Add Hua)
+// Get Single News by ID
 router.get('/:id', async (req, res) => {
   try {
-    const news = await News.findById(req.params.id);
-    if (!news) return res.status(404).json({ success: false, message: 'News not found' });
+    const news = await News.findById(req.params.id); 
+    if (!news || news.isDeleted) return res.status(404).json({ success: false, message: 'News not found' });
     res.json({ success: true, data: news });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -22,47 +25,139 @@ router.get('/:id', async (req, res) => {
 });
 
 // Create new news
-router.post('/', async (req, res) => {
+router.post('/', protect, async (req, res) => {
   try {
     const newNews = new News(req.body);
     await newNews.save();
     res.json({ success: true, data: newNews });
-  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+  } catch (err) { 
+    res.status(500).json({ success: false, message: err.message }); 
+  }
 });
 
 // Update news
-router.put('/:id', async (req, res) => {
+router.put('/:id', protect, async (req, res) => {
   try {
-    const updatedNews = await News.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const updatedNews = await News.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after' });
     res.json({ success: true, data: updatedNews });
-  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+  } catch (err) { 
+    res.status(500).json({ success: false, message: err.message }); 
+  }
 });
 
 // Move to Trash (Soft Delete)
-router.patch('/:id/trash', async (req, res) => {
+router.patch('/:id/trash', protect, async (req, res) => {
   try {
     await News.findByIdAndUpdate(req.params.id, { isDeleted: true });
     res.json({ success: true, message: 'News moved to trash' });
-  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+  } catch (err) { 
+    res.status(500).json({ success: false, message: err.message }); 
+  }
 });
 
 // Restore from Trash
-router.patch('/:id/restore', async (req, res) => {
+router.patch('/:id/restore', protect, async (req, res) => {
   try {
     await News.findByIdAndUpdate(req.params.id, { isDeleted: false });
     res.json({ success: true, message: 'News restored' });
-  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+  } catch (err) { 
+    res.status(500).json({ success: false, message: err.message }); 
+  }
 });
 
 // Permanent Delete (Hard Delete)
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', protect, async (req, res) => {
   try {
     await News.findByIdAndDelete(req.params.id);
     res.json({ success: true, message: 'News permanently deleted' });
-  } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+  } catch (err) { 
+    res.status(500).json({ success: false, message: err.message }); 
+  }
 });
 
 module.exports = router;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const { protect } = require('../middleware/authMiddleware');
+// const express = require('express');
+// const router = express.Router();
+// const News = require('../models/News');
+
+// // Get ALL news (Active + Trashed dono bheje ga)
+// router.get('/', async (req, res) => {
+//   try {
+//     const news = await News.find({ isDeleted: false }).sort({ createdAt: -1 }); // FIX: Yahan se filter hata diya
+//     res.json({ success: true, data: news });
+//   } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+// });
+
+// // Get Single News by ID (🔥 Naya Add Hua)
+// router.get('/:id', async (req, res) => {
+//   try {
+//     const news = await News.findById(req.params.id); 
+//     if (!news) return res.status(404).json({ success: false, message: 'News not found' });
+//     res.json({ success: true, data: news });
+//   } catch (err) {
+//     res.status(500).json({ success: false, message: err.message });
+//   }
+// });
+
+// // Create new news
+// router.post('/', protect, async (req, res) => {
+//   try {
+//     const newNews = new News(req.body);
+//     await newNews.save();
+//     res.json({ success: true, data: newNews });
+//   } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+// });
+
+// // Update news
+// router.put('/:id', protect, async (req, res) => {
+//   try {
+//     const updatedNews = await News.findByIdAndUpdate(req.params.id, req.body, { new: true });
+//     res.json({ success: true, data: updatedNews });
+//   } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+// });
+
+// // Move to Trash (Soft Delete)
+// router.patch('/:id/trash', protect, async (req, res) => {
+//   try {
+//     await News.findByIdAndUpdate(req.params.id, { isDeleted: true });
+//     res.json({ success: true, message: 'News moved to trash' });
+//   } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+// });
+
+// // Restore from Trash
+// router.patch('/:id/restore', protect, async (req, res) => {
+//   try {
+//     await News.findByIdAndUpdate(req.params.id, { isDeleted: false });
+//     res.json({ success: true, message: 'News restored' });
+//   } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+// });
+
+// // Permanent Delete (Hard Delete)
+// router.delete('/:id', protect, async (req, res) => {
+//   try {
+//     await News.findByIdAndDelete(req.params.id);
+//     res.json({ success: true, message: 'News permanently deleted' });
+//   } catch (err) { res.status(500).json({ success: false, message: err.message }); }
+// });
+
+// module.exports = router;
 
 
 

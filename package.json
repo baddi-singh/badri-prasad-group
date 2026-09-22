@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "cloudinary": "^1.41.3"
+  },
+  "allowScripts": {
+    "core-js@3.50.0": true
+  },
+  "overrides": {
+    "multer-storage-cloudinary": {
+      "cloudinary": "$cloudinary"
+    }
+  }
+}
