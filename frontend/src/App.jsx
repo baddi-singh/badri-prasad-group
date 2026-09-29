@@ -1,6 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { CompanyProvider } from './context/CompanyContext'; 
+import StaticPage from './pages/StaticPage';
+import { pageContent } from './utils/pageContent';
+
 
 // Components
 import Navbar from './components/Navbar';
@@ -43,7 +46,11 @@ function App() {
               <Route path="/newsroom/:id" element={<NewsDetail />} />
               <Route path="/investors" element={<InvestorsPage />} /> 
               <Route path="/page/sustainability" element={<Sustainability />} />
-
+              <Route path="/privacy" element={<StaticPage {...pageContent.privacyPolicy} />} />
+              <Route path="/terms" element={<StaticPage {...pageContent.termsOfService} />} />
+              <Route path="/compliance" element={<StaticPage {...pageContent.compliance} />} />
+              <Route path="/csr" element={<StaticPage {...pageContent.csrVision} />} />
+              
               {/* Admin Routes */}
               <Route path="/admin" element={<AdminLogin />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
