@@ -6,7 +6,7 @@ const { protect } = require('../middleware/authMiddleware');
 // 1. Sabhi Companies ki list lana (Sorted by Priority First, then Latest)
 router.get('/', async (req, res) => {
   try {
-    const companies = await Company.find({ isDeleted: false }).sort({ priority: 1, createdAt: -1 });
+    const companies = await Company.find({ isDeleted: false }).sort({ priority: 1, createdAt: 1 });
     res.json({ success: true, data: companies });
   } catch (err) { 
     res.status(500).json({ success: false, message: err.message }); 
